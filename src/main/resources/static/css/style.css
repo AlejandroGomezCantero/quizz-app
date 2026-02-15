@@ -1,0 +1,203 @@
+/* ===== ESTILOS PERSONALIZADOS QUIZ APP ===== */
+
+/* Variables de colores */
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+    --dark-color: #212529;
+}
+
+/* Reset y configuración general */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Hacer que el footer siempre esté al fondo */
+.container {
+    flex: 1;
+}
+
+/* Estilos para las tarjetas */
+.card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border-radius: 10px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Jumbotron personalizado */
+.jumbotron {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px;
+}
+
+/* Botones personalizados */
+.btn {
+    border-radius: 5px;
+    font-weight: 500;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Navbar personalizada */
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Tabla responsive */
+.table-responsive {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Animación para elementos de lista */
+.list-group-item {
+    transition: background-color 0.2s ease;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* Paginación personalizada */
+.pagination {
+    margin-top: 20px;
+}
+
+.page-link {
+    border-radius: 5px;
+    margin: 0 2px;
+}
+
+/* Badges personalizados */
+.badge {
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+/* Alertas personalizadas */
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+/* Formularios */
+.form-control, .form-select {
+    border-radius: 5px;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Estilos para las preguntas */
+.pregunta-card {
+    margin-bottom: 20px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.pregunta-vf {
+    border-left-color: var(--info-color);
+}
+
+.pregunta-unica {
+    border-left-color: var(--success-color);
+}
+
+.pregunta-multiple {
+    border-left-color: var(--warning-color);
+}
+
+/* Loading spinner */
+.spinner-border {
+    margin: 20px auto;
+    display: block;
+}
+
+/* Error 404 */
+.error-page {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Footer sticky */
+footer {
+    margin-top: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .jumbotron h1 {
+        font-size: 2rem;
+    }
+    
+    .card {
+        margin-bottom: 15px;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+/* Utilidades personalizadas */
+.text-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.shadow-custom {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

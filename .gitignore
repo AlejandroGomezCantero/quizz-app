@@ -1,0 +1,59 @@
+# Archivos compilados de Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Carpetas de compilación
+target/
+build/
+out/
+
+# Archivos de Eclipse
+.classpath
+.project
+.settings/
+.metadata/
+
+# Archivos de IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Archivos de Visual Studio Code
+.vscode/
+
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Archivos de Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# Archivos temporales
+*.tmp
+*.bak
+*.swp
+*~
+
+# Archivos de configuración local (con contraseñas)
+application-local.properties
+application-dev.properties
+
+# Node modules (si usas React después)
+node_modules/
+npm-debug.log
+
+# Archivos de base de datos locales
+*.db
+*.sqlite
+
+# Archivos de Spring Boot
+spring-boot-devtools.properties

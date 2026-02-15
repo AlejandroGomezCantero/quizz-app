@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<footer th:fragment="footer" class="bg-dark text-white mt-5 py-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Quiz App</h5>
+                <p class="text-muted">Aplicación de preguntas y evaluaciones para DAM</p>
+            </div>
+            
+            <div class="col-md-4">
+                <h5>Enlaces Rápidos</h5>
+                <ul class="list-unstyled">
+                    <li><a th:href="@{/}" class="text-muted text-decoration-none">Inicio</a></li>
+                    <li><a th:href="@{/preguntas/vf}" class="text-muted text-decoration-none">Preguntas V/F</a></li>
+                    <li><a th:href="@{/categorias}" class="text-muted text-decoration-none">Categorías</a></li>
+                    <li><a th:href="@{/swagger-ui.html}" class="text-muted text-decoration-none" target="_blank">API REST</a></li>
+                </ul>
+            </div>
+            
+            <div class="col-md-4">
+                <h5>Información</h5>
+                <p class="text-muted">
+                    Versión: 1.0.0<br>
+                    Spring Boot + Thymeleaf<br>
+                    MySQL + MongoDB
+                </p>
+            </div>
+        </div>
+        
+        <hr class="bg-secondary">
+        
+        <div class="row">
+            <div class="col text-center">
+                <p class="mb-0 text-muted">© 2026 Quiz App - Proyecto DAM</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

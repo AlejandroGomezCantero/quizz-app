@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz App - Inicio</title>
+    <!-- Cargar Bootstrap (los estilos bonitos) -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+
+<!-- MENÚ SUPERIOR (NAVBAR) -->
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+        <!-- Logo que lleva al inicio -->
+        <a class="navbar-brand" th:href="@{/}">QuizApp</a>
+    </div>
+</nav>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="container mt-5">
+    <!-- Título principal -->
+    <h1>Bienvenido a Quiz App</h1>
+    <p class="lead">Aplicación de preguntas y evaluaciones</p>
+
+    <!-- TARJETAS CON BOTONES -->
+    <div class="row mt-4">
+        
+        <!-- Tarjeta 1: Verdadero/Falso -->
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Verdadero/Falso</h5>
+                    <p class="card-text">Preguntas de V/F</p>
+                    <!-- Por ahora el botón no hace nada (#) -->
+                    <!-- Después cambiaremos el # por la URL correcta -->
+                    <a href="#" class="btn btn-primary">Ver Preguntas</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 2: Selección Única -->
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Selección Única</h5>
+                    <p class="card-text">Preguntas con 3 opciones</p>
+                    <a href="#" class="btn btn-success">Ver Preguntas</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 3: Categorías -->
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Categorías</h5>
+                    <p class="card-text">Gestionar categorías</p>
+                    <a href="#" class="btn btn-info">Ver Categorías</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- FOOTER (PIE DE PÁGINA) -->
+<footer class="mt-5 py-3 bg-dark text-white text-center">
+    <p class="mb-0">© 2026 Quiz App - Proyecto DAM</p>
+</footer>
+
+<!-- Cargar JavaScript de Bootstrap -->
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
