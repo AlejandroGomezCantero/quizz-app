@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- th:text = Mostrar el título dinámico (Nueva o Editar) -->
+    <title th:text="${titulo} + ' - Quiz App'">Categoría - Quiz App</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- HEADER -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="container mt-4">
+    
+    <!-- Título dinámico -->
+    <h1 th:text="${titulo}">Nueva Categoría</h1>
+
+    <!-- FORMULARIO -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <!-- 
+                th:action = URL donde se envían los datos
+                th:object = Objeto que contiene los datos del formulario
+                method="post" = Enviar con POST
+            -->
+            <form th:action="@{/categorias/guardar}" 
+                  th:object="${categoria}" 
+                  method="post">
+                
+                <!-- Campo oculto para el ID (solo al editar) -->
+                <!-- Si es nueva, el ID es null y no se envía -->
+                <input type="hidden" th:field="*{id}" />
+
+                <!-- Campo: Nombre -->
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">
+                        Nombre <span class="text-danger">*</span>
+                    </label>
+                    <!-- 
+                        th:field = Conecta el input con el campo del objeto
+                        *{nombre} = categoria.nombre
+                        required = Campo obligatorio
+                    -->
+                    <input type="text" 
+                           class="form-control" 
+                           id="nombre"
+                           th:field="*{nombre}"
+                           placeholder="Ejemplo: Historia"
+                           required 
+                           maxlength="255">
+                    <small class="form-text text-muted">
+                        Nombre único de la categoría
+                    </small>
+                </div>
+
+                <!-- Campo: Descripción -->
+                <div class="mb-3">
+                    <label for="descripcion" class="form-label">
+                        Descripción
+                    </label>
+                    <textarea class="form-control" 
+                              id="descripcion"
+                              th:field="*{descripcion}"
+                              rows="3"
+                              placeholder="Ejemplo: Preguntas sobre eventos históricos"
+                              maxlength="500"></textarea>
+                    <small class="form-text text-muted">
+                        Descripción opcional (máximo 500 caracteres)
+                    </small>
+                </div>
+
+                <!-- BOTONES -->
+                <div class="d-flex gap-2">
+                    <!-- Botón Guardar -->
+                    <button type="submit" class="btn btn-primary">
+                        💾 Guardar
+                    </button>
+                    
+                    <!-- Botón Cancelar -->
+                    <a th:href="@{/categorias}" class="btn btn-secondary">
+                        ❌ Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- INFORMACIÓN ADICIONAL -->
+    <div class="alert alert-info mt-4">
+        <strong>💡 Consejos:</strong>
+        <ul class="mb-0">
+            <li>El nombre debe ser único (no puedes tener dos categorías con el mismo nombre)</li>
+            <li>La descripción es opcional pero ayuda a identificar mejor la categoría</li>
+            <li>No puedes eliminar una categoría si tiene preguntas asociadas</li>
+        </ul>
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

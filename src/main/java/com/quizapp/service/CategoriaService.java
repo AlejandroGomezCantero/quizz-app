@@ -1,40 +1,75 @@
 package com.quizapp.service;
 
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import com.quizapp.model.entity.Categoria;
 import com.quizapp.repository.CategoriaRepository;
 
-// Service = Lógica de negocio (las reglas de tu aplicación)
-// Aquí pones el "cerebro" de cómo funcionan las cosas
-
+// Service para gestionar Categorías
 @Service
 public class CategoriaService {
 
-    // Necesitamos el Repository para hablar con la BD
     private final CategoriaRepository repo;
 
-    // Constructor: Spring nos pasa el repository automáticamente
     public CategoriaService(CategoriaRepository repo) {
         this.repo = repo;
     }
 
-    // Método 1: Obtener TODAS las categorías
-    // Ejemplo: findAll() devuelve [Historia, Ciencia, Deportes]
+    // ========== MÉTODOS BÁSICOS ==========
+
+    // Obtener todas las categorías
     public List<Categoria> findAll() {
         return repo.findAll();
     }
 
-    // Método 2: Guardar una categoría (nueva o actualizada)
-    // Si no tiene ID, la crea
-    // Si tiene ID, la actualiza
+    // Buscar una categoría por ID
+    public Optional<Categoria> findById(Long id) {
+        return repo.findById(id);
+    }
+
+    // Buscar por nombre
+    public Optional<Categoria> findByNombre(String nombre) {
+        return repo.findByNombre(nombre);
+    }
+
+    // Guardar una categoría (crear o actualizar)
     public Categoria save(Categoria categoria) {
         return repo.save(categoria);
     }
 
-    // Método 3: Eliminar una categoría por su ID
-    // Ejemplo: deleteById(3) elimina la categoría con ID=3
+    // Eliminar por ID
     public void deleteById(Long id) {
         repo.deleteById(id);
+    }
+
+    // Verificar si existe
+    public boolean existsByNombre(String nombre) {
+        return repo.existsByNombre(nombre);
+    }
+
+    // ========== PAGINACIÓN ==========
+
+    // Obtener categorías con paginación
+    // Ejemplo: findAllPaginated(page=0, size=10) → primeras 10 categorías
+    public Page<Categoria> findAllPaginated(Pageable pageable) {
+        return repo.findAll(pageable);
+    }
+
+    // ========== MÉTODO ÚTIL ==========
+
+    // Obtener o crear una categoría
+    // Si existe, la devuelve; si no, la crea
+    public Categoria getOrCreate(String nombre) {
+        return repo.findByNombre(nombre)
+                .orElseGet(() -> {
+                    Categoria nuevaCategoria = new Categoria();
+                    nuevaCategoria.setNombre(nombre);
+                    return repo.save(nuevaCategoria);
+                });
     }
 }

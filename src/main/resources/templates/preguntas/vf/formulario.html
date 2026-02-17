@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo} + ' - Quiz App'">Pregunta V/F - Quiz App</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- HEADER -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="container mt-4">
+    
+    <!-- Título dinámico (Nueva o Editar) -->
+    <h1 th:text="${titulo}">Nueva Pregunta Verdadero/Falso</h1>
+
+    <!-- FORMULARIO -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <form th:action="@{/preguntas/vf/guardar}" 
+                  th:object="${pregunta}" 
+                  method="post">
+                
+                <!-- Campo oculto para el ID -->
+                <input type="hidden" th:field="*{id}" />
+
+                <!-- ENUNCIADO -->
+                <div class="mb-3">
+                    <label for="enunciado" class="form-label">
+                        Enunciado <span class="text-danger">*</span>
+                    </label>
+                    <textarea class="form-control" 
+                              id="enunciado"
+                              th:field="*{enunciado}"
+                              rows="4"
+                              placeholder="Ejemplo: La Tierra es el tercer planeta del sistema solar"
+                              required 
+                              maxlength="500"></textarea>
+                    <small class="form-text text-muted">
+                        Escribe la pregunta (máximo 500 caracteres)
+                    </small>
+                </div>
+
+                <!-- CATEGORÍA -->
+                <div class="mb-3">
+                    <label for="categoria" class="form-label">
+                        Categoría <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select" 
+                            id="categoria" 
+                            name="categoriaId"
+                            required>
+                        <option value="">-- Selecciona una categoría --</option>
+                        <option th:each="cat : ${categorias}"
+                                th:value="${cat.id}"
+                                th:text="${cat.nombre}"
+                                th:selected="${pregunta.categoria != null and pregunta.categoria.id == cat.id}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- RESPUESTA CORRECTA -->
+                <div class="mb-3">
+                    <label class="form-label">
+                        Respuesta Correcta <span class="text-danger">*</span>
+                    </label>
+                    <div class="mt-2">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" 
+                                   type="radio" 
+                                   name="respuestaCorrecta"
+                                   id="verdadero"
+                                   th:field="*{respuestaCorrecta}"
+                                   value="true"
+                                   required>
+                            <label class="form-check-label" for="verdadero">
+                                <strong class="text-success">✅ Verdadero</strong>
+                            </label>
+                        </div>
+                        
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" 
+                                   type="radio" 
+                                   name="respuestaCorrecta"
+                                   id="falso"
+                                   th:field="*{respuestaCorrecta}"
+                                   value="false"
+                                   required>
+                            <label class="form-check-label" for="falso">
+                                <strong class="text-danger">❌ Falso</strong>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTONES -->
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        💾 Guardar
+                    </button>
+                    <a th:href="@{/preguntas/vf}" class="btn btn-secondary btn-lg">
+                        ❌ Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- CONSEJOS -->
+    <div class="alert alert-info mt-4">
+        <h5 class="alert-heading">💡 Consejos:</h5>
+        <ul class="mb-0">
+            <li>El enunciado debe ser claro y sin ambigüedades</li>
+            <li>Evita dobles negaciones</li>
+            <li>La respuesta debe ser objetivamente verdadera o falsa</li>
+        </ul>
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

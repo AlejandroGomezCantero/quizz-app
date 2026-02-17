@@ -5,13 +5,15 @@ import jakarta.persistence.Entity;
 @Entity
 public class PreguntaVerdaderoFalso extends Pregunta {
 
-    private Boolean respuestaCorrecta;
+    // Usar boolean (minúscula) es más seguro para validaciones lógicas
+    private boolean respuestaCorrecta;
 
-    public Boolean getRespuestaCorrecta() {
+    // Cambia el nombre a 'is...' para que el Service lo encuentre
+    public boolean isRespuestaCorrecta() {
         return respuestaCorrecta;
     }
 
-    public void setRespuestaCorrecta(Boolean respuestaCorrecta) {
+    public void setRespuestaCorrecta(boolean respuestaCorrecta) {
         this.respuestaCorrecta = respuestaCorrecta;
     }
 }

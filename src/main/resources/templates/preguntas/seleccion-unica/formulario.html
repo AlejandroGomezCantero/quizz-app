@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo}">Pregunta Selección Única</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container mt-4">
+    
+    <h1 th:text="${titulo}">Nueva Pregunta Selección Única</h1>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <form th:action="@{/preguntas/seleccion-unica/guardar}" 
+                  th:object="${pregunta}" 
+                  method="post">
+                
+                <input type="hidden" th:field="*{id}" />
+
+                <!-- ENUNCIADO -->
+                <div class="mb-3">
+                    <label for="enunciado" class="form-label">
+                        Enunciado <span class="text-danger">*</span>
+                    </label>
+                    <textarea class="form-control" 
+                              id="enunciado"
+                              th:field="*{enunciado}"
+                              rows="3"
+                              placeholder="Ejemplo: ¿Cuál es la capital de Francia?"
+                              required 
+                              maxlength="500"></textarea>
+                </div>
+
+                <!-- CATEGORÍA -->
+                <div class="mb-3">
+                    <label for="categoria" class="form-label">
+                        Categoría <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select" 
+                            id="categoria" 
+                            name="categoriaId"
+                            required>
+                        <option value="">-- Selecciona --</option>
+                        <option th:each="cat : ${categorias}"
+                                th:value="${cat.id}"
+                                th:text="${cat.nombre}"
+                                th:selected="${pregunta.categoria != null and pregunta.categoria.id == cat.id}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- OPCIÓN A -->
+                <div class="mb-3">
+                    <label for="opcionA" class="form-label">
+                        Opción A <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="opcionA"
+                           th:field="*{opcionA}"
+                           placeholder="Primera opción"
+                           required 
+                           maxlength="255">
+                </div>
+
+                <!-- OPCIÓN B -->
+                <div class="mb-3">
+                    <label for="opcionB" class="form-label">
+                        Opción B <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="opcionB"
+                           th:field="*{opcionB}"
+                           placeholder="Segunda opción"
+                           required 
+                           maxlength="255">
+                </div>
+
+                <!-- OPCIÓN C -->
+                <div class="mb-3">
+                    <label for="opcionC" class="form-label">
+                        Opción C <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="opcionC"
+                           th:field="*{opcionC}"
+                           placeholder="Tercera opción"
+                           required 
+                           maxlength="255">
+                </div>
+
+                <!-- RESPUESTA CORRECTA -->
+                <div class="mb-3">
+                    <label for="opcionCorrecta" class="form-label">
+                        Respuesta Correcta <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select" 
+                            id="opcionCorrecta"
+                            th:field="*{opcionCorrecta}"
+                            required>
+                        <option value="">-- Selecciona la correcta --</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+                    <small class="form-text text-muted">
+                        Marca cuál de las 3 opciones es la correcta
+                    </small>
+                </div>
+
+                <!-- BOTONES -->
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        💾 Guardar
+                    </button>
+                    <a th:href="@{/preguntas/seleccion-unica}" class="btn btn-secondary btn-lg">
+                        ❌ Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- VISTA PREVIA -->
+    <div class="card mt-4 bg-light">
+        <div class="card-header">
+            <h5 class="mb-0">👁️ Vista Previa</h5>
+        </div>
+        <div class="card-body">
+            <p class="mb-3"><strong>Así se verá la pregunta:</strong></p>
+            <p class="fs-6" id="preview-enunciado">El enunciado aparecerá aquí...</p>
+            <div class="mt-2">
+                <button class="btn btn-outline-secondary btn-sm" disabled>A) Opción A</button>
+                <button class="btn btn-outline-secondary btn-sm" disabled>B) Opción B</button>
+                <button class="btn btn-outline-secondary btn-sm" disabled>C) Opción C</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Script para vista previa en tiempo real -->
+<script>
+    document.getElementById('enunciado').addEventListener('input', function(e) {
+        document.getElementById('preview-enunciado').textContent = 
+            e.target.value || 'El enunciado aparecerá aquí...';
+    });
+</script>
+</body>
+</html>

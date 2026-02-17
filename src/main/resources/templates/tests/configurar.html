@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Configurar Test</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container mt-4">
+    <h1>⚙️ Configurar Test</h1>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <form th:action="@{/tests/generar}" method="post">
+                
+                <!-- Nombre Usuario -->
+                <div class="mb-3">
+                    <label class="form-label">Tu Nombre *</label>
+                    <input type="text" class="form-control" name="nombreUsuario" 
+                           placeholder="Escribe tu nombre" required>
+                </div>
+
+                <!-- Tipo Preguntas -->
+                <div class="mb-3">
+                    <label class="form-label">Tipo de Preguntas *</label>
+                    <select class="form-select" name="tipo" required>
+                        <option value="VF">Verdadero/Falso</option>
+                        <option value="UNICA">Selección Única</option>
+                        <option value="MULTIPLE">Selección Múltiple</option>
+                    </select>
+                </div>
+
+                <!-- Cantidad -->
+                <div class="mb-3">
+                    <label class="form-label">Cantidad de Preguntas *</label>
+                    <input type="number" class="form-control" name="cantidad" 
+                           min="1" max="50" value="10" required>
+                </div>
+
+                <!-- Categoría (Opcional) -->
+                <div class="mb-3">
+                    <label class="form-label">Categoría (Opcional)</label>
+                    <select class="form-select" name="categoriaId">
+                        <option value="">Todas las categorías</option>
+                        <option th:each="cat : ${categorias}" 
+                                th:value="${cat.id}" 
+                                th:text="${cat.nombre}"></option>
+                    </select>
+                </div>
+
+                <!-- Botones -->
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        🚀 Generar Test
+                    </button>
+                    <a th:href="@{/tests}" class="btn btn-secondary btn-lg">
+                        ❌ Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

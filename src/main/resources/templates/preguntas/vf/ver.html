@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Pregunta - Quiz App</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container mt-4">
+    
+    <h1>📝 Detalle de Pregunta V/F</h1>
+
+    <div class="card mt-4 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Pregunta #<span th:text="${pregunta.id}">1</span></h5>
+        </div>
+        <div class="card-body">
+            
+            <!-- ENUNCIADO -->
+            <div class="mb-4">
+                <h5 class="text-muted mb-2">📄 Enunciado:</h5>
+                <p class="fs-5" th:text="${pregunta.enunciado}">
+                    La Tierra es redonda
+                </p>
+            </div>
+
+            <!-- CATEGORÍA -->
+            <div class="mb-4">
+                <h5 class="text-muted mb-2">🏷️ Categoría:</h5>
+                <p>
+                    <span th:if="${pregunta.categoria != null}" 
+                          class="badge bg-info fs-6 px-3 py-2"
+                          th:text="${pregunta.categoria.nombre}">Ciencia</span>
+                    <span th:if="${pregunta.categoria == null}" 
+                          class="text-muted">Sin categoría</span>
+                </p>
+            </div>
+
+            <!-- RESPUESTA CORRECTA -->
+            <div class="mb-4">
+                <h5 class="text-muted mb-2">✔️ Respuesta Correcta:</h5>
+                <p>
+                    <span th:if="${pregunta.respuestaCorrecta}" 
+                          class="badge bg-success fs-5 px-4 py-2">✅ Verdadero</span>
+                    <span th:unless="${pregunta.respuestaCorrecta}" 
+                          class="badge bg-danger fs-5 px-4 py-2">❌ Falso</span>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- BOTONES -->
+    <div class="d-flex gap-2 mt-4">
+        <a th:href="@{/preguntas/vf/editar/{id}(id=${pregunta.id})}" 
+           class="btn btn-warning btn-lg">✏️ Editar</a>
+        
+        <a th:href="@{/preguntas/vf/eliminar/{id}(id=${pregunta.id})}" 
+           class="btn btn-danger btn-lg"
+           onclick="return confirm('¿Eliminar esta pregunta?')">🗑️ Eliminar</a>
+        
+        <a th:href="@{/preguntas/vf}" class="btn btn-secondary btn-lg">⬅️ Volver</a>
+    </div>
+
+    <!-- VISTA PREVIA -->
+    <div class="card mt-4 border-primary">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">👁️ Vista Previa</h5>
+        </div>
+        <div class="card-body">
+            <p class="fs-5 mb-3" th:text="${pregunta.enunciado}">Pregunta</p>
+            <div class="d-flex gap-3">
+                <button class="btn btn-outline-success" disabled>✅ Verdadero</button>
+                <button class="btn btn-outline-danger" disabled>❌ Falso</button>
+            </div>
+            <small class="text-muted d-block mt-2">
+                Así se verá en un test
+            </small>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntas Selección Única - Quiz App</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container mt-4">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>📝 Preguntas Selección Única</h1>
+        <a th:href="@{/preguntas/seleccion-unica/nueva}" class="btn btn-success">
+            ➕ Nueva Pregunta
+        </a>
+    </div>
+
+    <!-- Mensajes -->
+    <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show">
+        <span th:text="${mensajeExito}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${mensajeError}" class="alert alert-danger alert-dismissible fade show">
+        <span th:text="${mensajeError}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <p class="text-muted">
+        Total: <strong th:text="${totalElementos}">0</strong> preguntas
+    </p>
+
+    <!-- Tabla -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th style="width: 5%">ID</th>
+                            <th style="width: 30%">Enunciado</th>
+                            <th style="width: 12%">Categoría</th>
+                            <th style="width: 35%">Opciones</th>
+                            <th style="width: 8%">Correcta</th>
+                            <th style="width: 10%">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(preguntas)}">
+                            <td colspan="6" class="text-center text-muted">
+                                No hay preguntas. ¡Crea una nueva!
+                            </td>
+                        </tr>
+                        
+                        <tr th:each="pregunta : ${preguntas}">
+                            <td th:text="${pregunta.id}">1</td>
+                            <td th:text="${pregunta.enunciado}">¿Capital de Francia?</td>
+                            <td>
+                                <span class="badge bg-info" 
+                                      th:text="${pregunta.categoria?.nombre}">Geografía</span>
+                            </td>
+                            <td>
+                                <small>
+                                    <strong>A:</strong> <span th:text="${pregunta.opcionA}">Madrid</span><br>
+                                    <strong>B:</strong> <span th:text="${pregunta.opcionB}">París</span><br>
+                                    <strong>C:</strong> <span th:text="${pregunta.opcionC}">Londres</span>
+                                </small>
+                            </td>
+                            <td>
+                                <span class="badge bg-success" th:text="${pregunta.opcionCorrecta}">B</span>
+                            </td>
+                            <td>
+                                <a th:href="@{/preguntas/seleccion-unica/ver/{id}(id=${pregunta.id})}" 
+                                   class="btn btn-sm btn-info" title="Ver">👁️</a>
+                                <a th:href="@{/preguntas/seleccion-unica/editar/{id}(id=${pregunta.id})}" 
+                                   class="btn btn-sm btn-warning" title="Editar">✏️</a>
+                                <a th:href="@{/preguntas/seleccion-unica/eliminar/{id}(id=${pregunta.id})}" 
+                                   class="btn btn-sm btn-danger" title="Eliminar"
+                                   onclick="return confirm('¿Eliminar?')">🗑️</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paginación -->
+    <nav th:if="${totalPaginas > 1}" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${paginaActual == 0} ? 'disabled'">
+                <a class="page-link" th:href="@{/preguntas/seleccion-unica(page=${paginaActual - 1})}">Anterior</a>
+            </li>
+            <li class="page-item" 
+                th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}"
+                th:classappend="${i == paginaActual} ? 'active'">
+                <a class="page-link" 
+                   th:href="@{/preguntas/seleccion-unica(page=${i})}" 
+                   th:text="${i + 1}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${paginaActual == totalPaginas - 1} ? 'disabled'">
+                <a class="page-link" th:href="@{/preguntas/seleccion-unica(page=${paginaActual + 1})}">Siguiente</a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>

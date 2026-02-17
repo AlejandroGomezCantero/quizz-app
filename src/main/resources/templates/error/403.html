@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>403 - Acceso Denegado</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- HEADER -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- CONTENIDO -->
+<div class="container text-center mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            
+            <!-- Icono de error -->
+            <div class="mb-4">
+                <span style="font-size: 8rem; color: #dc3545;">🚫</span>
+            </div>
+
+            <!-- Código de error -->
+            <h1 class="display-1 fw-bold text-danger">403</h1>
+            
+            <!-- Mensaje -->
+            <h2 class="mb-4">Acceso Denegado</h2>
+            
+            <p class="lead text-muted mb-4">
+                Lo sentimos, no tienes permiso para acceder a esta página.
+            </p>
+
+            <!-- Información adicional -->
+            <div class="alert alert-warning" role="alert">
+                <strong>⚠️ Posibles causas:</strong>
+                <ul class="text-start mb-0">
+                    <li>No tienes los permisos necesarios</li>
+                    <li>Necesitas iniciar sesión</li>
+                    <li>Tu cuenta no tiene acceso a este recurso</li>
+                </ul>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="mt-4">
+                <a th:href="@{/}" class="btn btn-primary btn-lg me-2">
+                    🏠 Volver al Inicio
+                </a>
+                <a href="javascript:history.back()" class="btn btn-secondary btn-lg">
+                    ⬅️ Página Anterior
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

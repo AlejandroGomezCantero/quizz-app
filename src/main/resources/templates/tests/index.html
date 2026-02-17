@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tests - Quiz App</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container mt-4">
+    <h1>🎯 Sistema de Evaluaciones</h1>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h2>📝</h2>
+                    <h5>Realizar Test</h5>
+                    <p>Comienza una nueva evaluación</p>
+                    <a th:href="@{/tests/nuevo}" class="btn btn-primary btn-lg">
+                        Nuevo Test
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h2>📊</h2>
+                    <h5>Mi Historial</h5>
+                    <p>Ver tests realizados</p>
+                    <a th:href="@{/tests/historial}" class="btn btn-info btn-lg">
+                        Ver Historial
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categorías - Quiz App</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- HEADER (menú de navegación) -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="container mt-4">
+    
+    <!-- TÍTULO Y BOTÓN NUEVO -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Categorías</h1>
+        <a th:href="@{/categorias/nueva}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nueva Categoría
+        </a>
+    </div>
+
+    <!-- MENSAJES DE ÉXITO/ERROR -->
+    <!-- th:if = Mostrar solo si existe el mensaje -->
+    <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${mensajeExito}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${mensajeError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${mensajeError}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- INFORMACIÓN: Cuántas categorías hay -->
+    <p class="text-muted">
+        Total: <strong th:text="${totalElementos}">0</strong> categorías
+    </p>
+
+    <!-- TABLA DE CATEGORÍAS -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- th:each = Bucle for (repite por cada categoría) -->
+                        <!-- Si no hay categorías, muestra el siguiente tr -->
+                        <tr th:if="${#lists.isEmpty(categorias)}">
+                            <td colspan="4" class="text-center text-muted">
+                                No hay categorías. ¡Crea una nueva!
+                            </td>
+                        </tr>
+                        
+                        <!-- Repetir esta fila por cada categoría -->
+                        <tr th:each="categoria : ${categorias}">
+                            <!-- th:text = Mostrar el valor -->
+                            <td th:text="${categoria.id}">1</td>
+                            <td>
+                                <strong th:text="${categoria.nombre}">Historia</strong>
+                            </td>
+                            <td th:text="${categoria.descripcion}">Preguntas sobre eventos históricos</td>
+                            <td>
+                                <!-- Botón Editar -->
+                                <a th:href="@{/categorias/editar/{id}(id=${categoria.id})}" 
+                                   class="btn btn-sm btn-warning"
+                                   title="Editar">
+                                    ✏️ Editar
+                                </a>
+                                
+                                <!-- Botón Eliminar (con confirmación JavaScript) -->
+                                <a th:href="@{/categorias/eliminar/{id}(id=${categoria.id})}" 
+                                   class="btn btn-sm btn-danger"
+                                   title="Eliminar"
+                                   onclick="return confirm('¿Estás seguro de eliminar esta categoría?')">
+                                    🗑️ Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGINACIÓN -->
+    <!-- th:if = Solo mostrar si hay más de 1 página -->
+    <nav th:if="${totalPaginas > 1}" class="mt-4">
+        <ul class="pagination justify-content-center">
+            
+            <!-- Botón "Anterior" -->
+            <li class="page-item" th:classappend="${paginaActual == 0} ? 'disabled'">
+                <a class="page-link" th:href="@{/categorias(page=${paginaActual - 1})}">
+                    Anterior
+                </a>
+            </li>
+
+            <!-- Números de página -->
+            <!-- th:each con ranges = Bucle numérico -->
+            <li class="page-item" 
+                th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}"
+                th:classappend="${i == paginaActual} ? 'active'">
+                <a class="page-link" th:href="@{/categorias(page=${i})}" th:text="${i + 1}">1</a>
+            </li>
+
+            <!-- Botón "Siguiente" -->
+            <li class="page-item" th:classappend="${paginaActual == totalPaginas - 1} ? 'disabled'">
+                <a class="page-link" th:href="@{/categorias(page=${paginaActual + 1})}">
+                    Siguiente
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+
+<!-- FOOTER -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

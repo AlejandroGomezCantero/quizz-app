@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ver Pregunta - Quiz App</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container mt-4">
+    
+    <h1>📝 Detalle Pregunta Selección Única</h1>
+
+    <div class="card mt-4 shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Pregunta #<span th:text="${pregunta.id}">1</span></h5>
+        </div>
+        <div class="card-body">
+            
+            <!-- ENUNCIADO -->
+            <div class="mb-4">
+                <h5 class="text-muted mb-2">📄 Enunciado:</h5>
+                <p class="fs-5" th:text="${pregunta.enunciado}">¿Cuál es la capital de Francia?</p>
+            </div>
+
+            <!-- CATEGORÍA -->
+            <div class="mb-4">
+                <h5 class="text-muted mb-2">🏷️ Categoría:</h5>
+                <p>
+                    <span th:if="${pregunta.categoria != null}" 
+                          class="badge bg-info fs-6 px-3 py-2"
+                          th:text="${pregunta.categoria.nombre}">Geografía</span>
+                </p>
+            </div>
+
+            <!-- OPCIONES -->
+            <div class="mb-4">
+                <h5 class="text-muted mb-2">📋 Opciones:</h5>
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <strong>A)</strong> <span th:text="${pregunta.opcionA}">Madrid</span>
+                    </div>
+                    <div class="list-group-item">
+                        <strong>B)</strong> <span th:text="${pregunta.opcionB}">París</span>
+                    </div>
+                    <div class="list-group-item">
+                        <strong>C)</strong> <span th:text="${pregunta.opcionC}">Londres</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESPUESTA CORRECTA -->
+            <div class="mb-4">
+                <h5 class="text-muted mb-2">✔️ Respuesta Correcta:</h5>
+                <p>
+                    <span class="badge bg-success fs-5 px-4 py-2" 
+                          th:text="'Opción ' + ${pregunta.opcionCorrecta}">Opción B</span>
+                </p>
+                <div class="alert alert-success mt-2">
+                    <strong>Respuesta:</strong> 
+                    <span th:if="${pregunta.opcionCorrecta == 'A'}" th:text="${pregunta.opcionA}"></span>
+                    <span th:if="${pregunta.opcionCorrecta == 'B'}" th:text="${pregunta.opcionB}"></span>
+                    <span th:if="${pregunta.opcionCorrecta == 'C'}" th:text="${pregunta.opcionC}"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- BOTONES -->
+    <div class="d-flex gap-2 mt-4">
+        <a th:href="@{/preguntas/seleccion-unica/editar/{id}(id=${pregunta.id})}" 
+           class="btn btn-warning btn-lg">✏️ Editar</a>
+        <a th:href="@{/preguntas/seleccion-unica/eliminar/{id}(id=${pregunta.id})}" 
+           class="btn btn-danger btn-lg"
+           onclick="return confirm('¿Eliminar?')">🗑️ Eliminar</a>
+        <a th:href="@{/preguntas/seleccion-unica}" class="btn btn-secondary btn-lg">⬅️ Volver</a>
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Error del Servidor</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- HEADER -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- CONTENIDO -->
+<div class="container text-center mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            
+            <!-- Icono de error -->
+            <div class="mb-4">
+                <span style="font-size: 8rem; color: #ffc107;">⚠️</span>
+            </div>
+
+            <!-- Código de error -->
+            <h1 class="display-1 fw-bold text-warning">500</h1>
+            
+            <!-- Mensaje -->
+            <h2 class="mb-4">Error Interno del Servidor</h2>
+            
+            <p class="lead text-muted mb-4">
+                Lo sentimos, algo salió mal en nuestro servidor.
+            </p>
+
+            <!-- Mensaje de error técnico (si existe) -->
+            <div th:if="${errorMessage}" class="alert alert-danger text-start" role="alert">
+                <h5 class="alert-heading">🔧 Información técnica:</h5>
+                <hr>
+                <p class="mb-0">
+                    <code th:text="${errorMessage}">Error message</code>
+                </p>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="alert alert-info" role="alert">
+                <strong>ℹ️ Qué puedes hacer:</strong>
+                <ul class="text-start mb-0">
+                    <li>Espera unos minutos e intenta de nuevo</li>
+                    <li>Verifica que todos los servicios estén funcionando</li>
+                    <li>Si el problema persiste, contacta al administrador</li>
+                </ul>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="mt-4">
+                <a th:href="@{/}" class="btn btn-primary btn-lg me-2">
+                    🏠 Volver al Inicio
+                </a>
+                <a href="javascript:location.reload()" class="btn btn-warning btn-lg me-2">
+                    🔄 Reintentar
+                </a>
+                <a href="javascript:history.back()" class="btn btn-secondary btn-lg">
+                    ⬅️ Página Anterior
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

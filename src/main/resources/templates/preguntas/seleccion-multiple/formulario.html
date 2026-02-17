@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${titulo}">Pregunta Selección Múltiple</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container mt-4">
+    
+    <h1 th:text="${titulo}">Nueva Pregunta Selección Múltiple</h1>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <form th:action="@{/preguntas/seleccion-multiple/guardar}" 
+                  th:object="${pregunta}" 
+                  method="post">
+                
+                <input type="hidden" th:field="*{id}" />
+
+                <!-- ENUNCIADO -->
+                <div class="mb-3">
+                    <label for="enunciado" class="form-label">
+                        Enunciado <span class="text-danger">*</span>
+                    </label>
+                    <textarea class="form-control" 
+                              id="enunciado"
+                              th:field="*{enunciado}"
+                              rows="3"
+                              placeholder="Ejemplo: ¿Cuáles son lenguajes de programación?"
+                              required 
+                              maxlength="500"></textarea>
+                </div>
+
+                <!-- CATEGORÍA -->
+                <div class="mb-3">
+                    <label for="categoria" class="form-label">
+                        Categoría <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select" 
+                            id="categoria" 
+                            name="categoriaId"
+                            required>
+                        <option value="">-- Selecciona --</option>
+                        <option th:each="cat : ${categorias}"
+                                th:value="${cat.id}"
+                                th:text="${cat.nombre}"
+                                th:selected="${pregunta.categoria != null and pregunta.categoria.id == cat.id}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- OPCIÓN A -->
+                <div class="mb-3">
+                    <label for="opcionA" class="form-label">
+                        Opción A <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="opcionA"
+                           th:field="*{opcionA}"
+                           placeholder="Primera opción"
+                           required 
+                           maxlength="255">
+                </div>
+
+                <!-- OPCIÓN B -->
+                <div class="mb-3">
+                    <label for="opcionB" class="form-label">
+                        Opción B <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="opcionB"
+                           th:field="*{opcionB}"
+                           placeholder="Segunda opción"
+                           required 
+                           maxlength="255">
+                </div>
+
+                <!-- OPCIÓN C -->
+                <div class="mb-3">
+                    <label for="opcionC" class="form-label">
+                        Opción C <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="opcionC"
+                           th:field="*{opcionC}"
+                           placeholder="Tercera opción"
+                           required 
+                           maxlength="255">
+                </div>
+
+                <!-- OPCIÓN D -->
+                <div class="mb-3">
+                    <label for="opcionD" class="form-label">
+                        Opción D <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="opcionD"
+                           th:field="*{opcionD}"
+                           placeholder="Cuarta opción"
+                           required 
+                           maxlength="255">
+                </div>
+
+                <!-- RESPUESTAS CORRECTAS (CHECKBOXES) -->
+                <div class="mb-3">
+                    <label class="form-label">
+                        Respuestas Correctas <span class="text-danger">*</span>
+                    </label>
+                    <small class="d-block text-muted mb-2">
+                        Marca TODAS las opciones que son correctas (puede haber más de una)
+                    </small>
+                    <div class="form-check">
+                        <input class="form-check-input" 
+                               type="checkbox" 
+                               name="respuestasCorrectas" 
+                               value="A" 
+                               id="respA"
+                               th:checked="${pregunta.respuestasCorrectas != null and #lists.contains(pregunta.respuestasCorrectas, 'A')}">
+                        <label class="form-check-label" for="respA">
+                            <strong>Opción A</strong>
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" 
+                               type="checkbox" 
+                               name="respuestasCorrectas" 
+                               value="B" 
+                               id="respB"
+                               th:checked="${pregunta.respuestasCorrectas != null and #lists.contains(pregunta.respuestasCorrectas, 'B')}">
+                        <label class="form-check-label" for="respB">
+                            <strong>Opción B</strong>
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" 
+                               type="checkbox" 
+                               name="respuestasCorrectas" 
+                               value="C" 
+                               id="respC"
+                               th:checked="${pregunta.respuestasCorrectas != null and #lists.contains(pregunta.respuestasCorrectas, 'C')}">
+                        <label class="form-check-label" for="respC">
+                            <strong>Opción C</strong>
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" 
+                               type="checkbox" 
+                               name="respuestasCorrectas" 
+                               value="D" 
+                               id="respD"
+                               th:checked="${pregunta.respuestasCorrectas != null and #lists.contains(pregunta.respuestasCorrectas, 'D')}">
+                        <label class="form-check-label" for="respD">
+                            <strong>Opción D</strong>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- BOTONES -->
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-warning btn-lg">
+                        💾 Guardar
+                    </button>
+                    <a th:href="@{/preguntas/seleccion-multiple}" class="btn btn-secondary btn-lg">
+                        ❌ Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- CONSEJOS -->
+    <div class="alert alert-info mt-4">
+        <h5 class="alert-heading">💡 Consejos:</h5>
+        <ul class="mb-0">
+            <li>Marca TODAS las opciones que sean correctas</li>
+            <li>Puede haber 1, 2, 3 o hasta 4 respuestas correctas</li>
+            <li>Asegúrate de marcar al menos una opción</li>
+        </ul>
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Validación: al menos un checkbox marcado -->
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    const checkboxes = document.querySelectorAll('input[name="respuestasCorrectas"]:checked');
+    if (checkboxes.length === 0) {
+        e.preventDefault();
+        alert('Debes marcar al menos una respuesta correcta');
+        return false;
+    }
+});
+</script>
+</body>
+</html>

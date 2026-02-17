@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Quiz App</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body class="bg-light">
+
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    
+                    <h2 class="text-center mb-4">🔐 Iniciar Sesión</h2>
+
+                    <!-- Mensajes -->
+                    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                    <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
+
+                    <form th:action="@{/login}" method="post">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Usuario</label>
+                            <input type="text" class="form-control" name="username" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 btn-lg">
+                            Entrar
+                        </button>
+
+                    </form>
+
+                    <hr>
+
+                    <p class="text-center mb-0">
+                        ¿No tienes cuenta? 
+                        <a th:href="@{/registro}">Regístrate aquí</a>
+                    </p>
+
+                    <p class="text-center mt-2">
+                        <a th:href="@{/}">← Volver al inicio</a>
+                    </p>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
