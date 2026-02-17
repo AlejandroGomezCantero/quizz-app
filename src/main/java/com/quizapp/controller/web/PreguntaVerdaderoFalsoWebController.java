@@ -33,22 +33,24 @@ public class PreguntaVerdaderoFalsoWebController {
     @GetMapping
     public String listar(
             @RequestParam(defaultValue = "0") int page,
+            @RequestParam(required = false) Long categoriaId,
+            @RequestParam(required = false) String texto,
             Model model) {
-        
-        // Paginación: 10 preguntas por página
+
         Pageable pageable = PageRequest.of(page, 10);
-        Page<PreguntaVerdaderoFalso> paginaPreguntas = preguntaService.findAllPaginated(pageable);
-        
-        // Añadir datos al modelo
+        Page<PreguntaVerdaderoFalso> paginaPreguntas = 
+            preguntaService.buscarConFiltros(categoriaId, texto, pageable);
+
         model.addAttribute("preguntas", paginaPreguntas.getContent());
         model.addAttribute("paginaActual", page);
         model.addAttribute("totalPaginas", paginaPreguntas.getTotalPages());
         model.addAttribute("totalElementos", paginaPreguntas.getTotalElements());
-        
-        // Devolver vista: templates/preguntas/vf/listar.html
+        model.addAttribute("categorias", categoriaService.findAll()); // NUEVO
+        model.addAttribute("categoriaId", categoriaId); // Para mantener filtro activo
+        model.addAttribute("texto", texto); // Para mantener filtro activo
+
         return "preguntas/vf/listar";
     }
-
     // ========== MOSTRAR FORMULARIO NUEVA ==========
     
     // GET /preguntas/vf/nueva

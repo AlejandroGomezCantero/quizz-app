@@ -9,21 +9,29 @@
 </head>
 <body>
 
-<!-- HEADER -->
 <div th:replace="~{fragments/header :: header}"></div>
 
-<!-- CONTENIDO PRINCIPAL -->
 <div class="container mt-5">
-    
+
     <!-- TÍTULO PRINCIPAL -->
     <div class="text-center mb-5 p-5 bg-light rounded">
         <h1 class="display-3">Bienvenido a Quiz App</h1>
         <p class="lead text-muted">Aplicación de preguntas y evaluaciones</p>
+
+        <!-- BOTONES LOGIN / REGISTRO -->
+        <div class="mt-4 d-flex gap-3 justify-content-center">
+            <a th:href="@{/login}" class="btn btn-primary btn-lg">
+                🔐 Iniciar Sesión
+            </a>
+            <a th:href="@{/registro}" class="btn btn-success btn-lg">
+                📝 Registrarse
+            </a>
+        </div>
     </div>
 
     <!-- TARJETAS PRINCIPALES -->
     <div class="row g-4 justify-content-center">
-        
+
         <!-- Tarjeta: PREGUNTAS -->
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 shadow text-center">
@@ -88,14 +96,18 @@
                     <h5 class="card-title">🔌 Recursos Adicionales</h5>
                     <p class="card-text text-muted">Accede a herramientas y documentación</p>
                     <div class="d-flex gap-3 justify-content-center flex-wrap">
-                        <a th:href="@{/swagger-ui.html}" 
-                           class="btn btn-outline-secondary" 
+                        <a th:href="@{/swagger-ui.html}"
+                           class="btn btn-outline-secondary"
                            target="_blank">
                             📖 API Docs (Swagger)
                         </a>
-                        <a th:href="@{/preguntas/importar}" 
+                        <a th:href="@{/preguntas/importar}"
                            class="btn btn-outline-secondary">
                             📤 Importar CSV
+                        </a>
+                        <a th:href="@{/api-externa}"
+                           class="btn btn-outline-secondary">
+                            🌐 Importar desde API Externa
                         </a>
                     </div>
                 </div>
@@ -105,9 +117,7 @@
 
 </div>
 
-<!-- FOOTER -->
 <div th:replace="~{fragments/footer :: footer}"></div>
-
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

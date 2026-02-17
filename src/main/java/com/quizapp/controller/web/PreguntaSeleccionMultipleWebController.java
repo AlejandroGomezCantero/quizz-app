@@ -35,16 +35,22 @@ public class PreguntaSeleccionMultipleWebController {
     @GetMapping
     public String listar(
             @RequestParam(defaultValue = "0") int page,
+            @RequestParam(required = false) Long categoriaId,
+            @RequestParam(required = false) String texto,
             Model model) {
-        
+
         Pageable pageable = PageRequest.of(page, 10);
-        Page<PreguntaSeleccionMultiple> paginaPreguntas = preguntaService.findAllPaginated(pageable);
-        
+        Page<PreguntaSeleccionMultiple> paginaPreguntas =
+            preguntaService.buscarConFiltros(categoriaId, texto, pageable);
+
         model.addAttribute("preguntas", paginaPreguntas.getContent());
         model.addAttribute("paginaActual", page);
         model.addAttribute("totalPaginas", paginaPreguntas.getTotalPages());
         model.addAttribute("totalElementos", paginaPreguntas.getTotalElements());
-        
+        model.addAttribute("categorias", categoriaService.findAll());
+        model.addAttribute("categoriaId", categoriaId);
+        model.addAttribute("texto", texto);
+
         return "preguntas/seleccion-multiple/listar";
     }
 

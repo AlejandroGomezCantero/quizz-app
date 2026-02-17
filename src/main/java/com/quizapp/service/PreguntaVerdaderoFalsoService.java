@@ -21,6 +21,12 @@ public class PreguntaVerdaderoFalsoService {
     public PreguntaVerdaderoFalsoService(PreguntaVerdaderoFalsoRepository repo) {
         this.repo = repo;
     }
+    
+    
+    public Page<PreguntaVerdaderoFalso> buscarConFiltros(
+            Long categoriaId, String texto, Pageable pageable) {
+        return repo.buscarConFiltros(categoriaId, texto, pageable);
+    }
 
     // ========== CRUD BÁSICO ==========
 

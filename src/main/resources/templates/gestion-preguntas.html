@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Preguntas - Quiz App</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container mt-4">
+
+    <h1 class="mb-4">📋 Gestión de Preguntas</h1>
+
+    <!-- Resumen -->
+    <div class="alert alert-info">
+        <h5 class="alert-heading">📊 Resumen</h5>
+        <p class="mb-0">
+            Total de preguntas: <strong th:text="${total}">0</strong>
+        </p>
+    </div>
+
+    <!-- Tarjetas -->
+    <div class="row g-4">
+
+        <!-- Verdadero/Falso -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="mb-3">✅❌</h2>
+                    <h5 class="card-title">Verdadero/Falso</h5>
+                    <p class="card-text text-muted">
+                        Preguntas con respuesta verdadero o falso
+                    </p>
+                    <hr>
+                    <p class="mb-3">
+                        <span class="badge bg-primary fs-5" th:text="${totalVF}">0</span>
+                        <small class="text-muted d-block">preguntas</small>
+                    </p>
+                    <div class="d-grid gap-2">
+                        <a th:href="@{/preguntas/vf}" class="btn btn-primary">
+                            📋 Ver Todas
+                        </a>
+                        <a th:href="@{/preguntas/vf/nueva}" class="btn btn-outline-primary">
+                            ➕ Crear Nueva
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Selección Única -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="mb-3">🔘</h2>
+                    <h5 class="card-title">Selección Única</h5>
+                    <p class="card-text text-muted">
+                        Preguntas con 3 opciones (solo 1 correcta)
+                    </p>
+                    <hr>
+                    <p class="mb-3">
+                        <span class="badge bg-success fs-5" th:text="${totalUnica}">0</span>
+                        <small class="text-muted d-block">preguntas</small>
+                    </p>
+                    <div class="d-grid gap-2">
+                        <a th:href="@{/preguntas/seleccion-unica}" class="btn btn-success">
+                            📋 Ver Todas
+                        </a>
+                        <a th:href="@{/preguntas/seleccion-unica/nueva}" class="btn btn-outline-success">
+                            ➕ Crear Nueva
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Selección Múltiple -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="mb-3">☑️</h2>
+                    <h5 class="card-title">Selección Múltiple</h5>
+                    <p class="card-text text-muted">
+                        Preguntas con 4 opciones (varias correctas)
+                    </p>
+                    <hr>
+                    <p class="mb-3">
+                        <span class="badge bg-warning fs-5" th:text="${totalMultiple}">0</span>
+                        <small class="text-muted d-block">preguntas</small>
+                    </p>
+                    <div class="d-grid gap-2">
+                        <a th:href="@{/preguntas/seleccion-multiple}" class="btn btn-warning">
+                            📋 Ver Todas
+                        </a>
+                        <a th:href="@{/preguntas/seleccion-multiple/nueva}" class="btn btn-outline-warning">
+                            ➕ Crear Nueva
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Herramientas -->
+    <div class="card mt-4 bg-light">
+        <div class="card-body">
+            <h5 class="card-title">🔧 Herramientas</h5>
+            <div class="row">
+                <div class="col-md-4 mb-2">
+                    <a th:href="@{/preguntas/importar}" class="btn btn-outline-secondary w-100">
+                        📤 Importar desde CSV
+                    </a>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <a th:href="@{/api-externa}" class="btn btn-outline-secondary w-100">
+                        🌐 Importar desde API
+                    </a>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <a th:href="@{/}" class="btn btn-outline-secondary w-100">
+                        🏠 Volver al Inicio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

@@ -64,6 +64,10 @@ public class PreguntaSeleccionMultipleService {
         return repo.buscarPorTexto(texto, pageable);
     }
 
+    public Page<PreguntaSeleccionMultiple> buscarConFiltros(
+            Long categoriaId, String texto, Pageable pageable) {
+        return repo.buscarConFiltros(categoriaId, texto, pageable);
+    }
     // ========== UTILIDADES ==========
 
     // Contar total

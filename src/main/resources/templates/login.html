@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Quiz App</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-light">
+
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h2>🔐 Quiz App</h2>
+                    <p class="mb-0">Inicia sesión para continuar</p>
+                </div>
+                <div class="card-body p-4">
+
+                    <div th:if="${param.error}" class="alert alert-danger">
+                        ❌ Usuario o contraseña incorrectos
+                    </div>
+                    <div th:if="${param.logout}" class="alert alert-success">
+                        ✅ Sesión cerrada correctamente
+                    </div>
+                    <div th:if="${param.registrado}" class="alert alert-success">
+                        ✅ Registro exitoso. Ya puedes iniciar sesión
+                    </div>
+
+                    <form th:action="@{/login-process}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Usuario</label>
+                            <input type="text"
+                                   class="form-control form-control-lg"
+                                   name="username"
+                                   placeholder="Tu nombre de usuario"
+                                   required autofocus>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Contraseña</label>
+                            <input type="password"
+                                   class="form-control form-control-lg"
+                                   name="password"
+                                   placeholder="Tu contraseña"
+                                   required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 btn-lg">
+                            🚀 Iniciar Sesión
+                        </button>
+                    </form>
+
+                    <hr>
+                    <p class="text-center mb-0">
+                        ¿No tienes cuenta?
+                        <a th:href="@{/registro}" class="fw-bold">Regístrate aquí</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

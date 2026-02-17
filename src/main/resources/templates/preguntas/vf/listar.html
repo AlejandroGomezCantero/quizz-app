@@ -112,6 +112,46 @@
 
 </div>
 
+<!-- FILTROS -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form th:action="@{/preguntas/vf}" method="get" class="row g-3">
+            
+            <!-- Búsqueda por texto -->
+            <div class="col-md-5">
+                <input type="text" 
+                       class="form-control" 
+                       name="texto"
+                       th:value="${texto}"
+                       placeholder="Buscar por enunciado...">
+            </div>
+
+            <!-- Filtro por categoría -->
+            <div class="col-md-4">
+                <select class="form-select" name="categoriaId">
+                    <option value="">Todas las categorías</option>
+                    <option th:each="cat : ${categorias}"
+                            th:value="${cat.id}"
+                            th:text="${cat.nombre}"
+                            th:selected="${cat.id == categoriaId}">
+                    </option>
+                </select>
+            </div>
+
+            <!-- Botones -->
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    🔍 Filtrar
+                </button>
+                <a th:href="@{/preguntas/vf}" class="btn btn-secondary">
+                    ✖ Limpiar
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>

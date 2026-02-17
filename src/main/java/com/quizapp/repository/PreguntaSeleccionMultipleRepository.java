@@ -8,17 +8,21 @@ import org.springframework.data.repository.query.Param;
 
 import com.quizapp.model.entity.PreguntaSeleccionMultiple;
 
-// Repository para preguntas de Selección Múltiple
 public interface PreguntaSeleccionMultipleRepository extends JpaRepository<PreguntaSeleccionMultiple, Long> {
     
-    // Buscar por categoría con paginación
-    // Ejemplo: findByCategoriaId(3) → todas las preguntas de categoría 3
     Page<PreguntaSeleccionMultiple> findByCategoriaId(Long categoriaId, Pageable pageable);
     
-    // Contar por categoría
     long countByCategoriaId(Long categoriaId);
     
-    // Buscar por texto en el enunciado
     @Query("SELECT p FROM PreguntaSeleccionMultiple p WHERE LOWER(p.enunciado) LIKE LOWER(CONCAT('%', :texto, '%'))")
     Page<PreguntaSeleccionMultiple> buscarPorTexto(@Param("texto") String texto, Pageable pageable);
+
+    // NUEVO — filtro combinado
+    @Query("SELECT p FROM PreguntaSeleccionMultiple p WHERE " +
+           "(:categoriaId IS NULL OR p.categoria.id = :categoriaId) AND " +
+           "(:texto IS NULL OR LOWER(p.enunciado) LIKE LOWER(CONCAT('%', :texto, '%')))")
+    Page<PreguntaSeleccionMultiple> buscarConFiltros(
+            @Param("categoriaId") Long categoriaId,
+            @Param("texto") String texto,
+            Pageable pageable);
 }

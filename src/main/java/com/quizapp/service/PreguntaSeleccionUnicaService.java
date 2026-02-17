@@ -68,6 +68,11 @@ public class PreguntaSeleccionUnicaService {
         return repo.buscarPorTexto(texto, pageable);
     }
 
+    
+    public Page<PreguntaSeleccionUnica> buscarConFiltros(
+            Long categoriaId, String texto, Pageable pageable) {
+        return repo.buscarConFiltros(categoriaId, texto, pageable);
+    }
     // ========== UTILIDADES ==========
 
     // Contar total de preguntas
