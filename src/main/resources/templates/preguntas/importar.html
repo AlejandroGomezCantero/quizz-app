@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Importar CSV - Quiz App</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container mt-4">
+
+    <h1 class="mb-4">📤 Importar Preguntas desde CSV</h1>
+
+    <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Subir archivo CSV</h5>
+            <p class="text-muted">El archivo debe tener el formato correcto según el tipo de pregunta.</p>
+
+            <form th:action="@{/preguntas/importar}" method="post"
+                  enctype="multipart/form-data">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Tipo de Pregunta</label>
+                    <select class="form-select" name="tipo" required>
+                        <option value="VF">Verdadero/Falso</option>
+                        <option value="UNICA">Selección Única</option>
+                        <option value="MULTIPLE">Selección Múltiple</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Archivo CSV</label>
+                    <input type="file" class="form-control" name="archivo"
+                           accept=".csv" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg">
+                    📤 Importar
+                </button>
+                <a th:href="@{/}" class="btn btn-secondary btn-lg ms-2">
+                    Cancelar
+                </a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Formato esperado -->
+    <div class="card mt-4 bg-light">
+        <div class="card-body">
+            <h5>📋 Formato del CSV</h5>
+            <p><strong>Verdadero/Falso:</strong></p>
+            <code>enunciado;respuestaCorrecta(true/false);nombreCategoria</code>
+            <p class="mt-3"><strong>Selección Única:</strong></p>
+            <code>enunciado;opcionA;opcionB;opcionC;opcionCorrecta(A/B/C);nombreCategoria</code>
+            <p class="mt-3"><strong>Selección Múltiple:</strong></p>
+            <code>enunciado;opcionA;opcionB;opcionC;opcionD;correctas(A,B);nombreCategoria</code>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

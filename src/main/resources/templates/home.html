@@ -13,108 +13,72 @@
 
 <div class="container mt-5">
 
-    <!-- TÍTULO PRINCIPAL -->
-    <div class="text-center mb-5 p-5 bg-light rounded">
-        <h1 class="display-3">Bienvenido a Quiz App</h1>
-        <p class="lead text-muted">Aplicación de preguntas y evaluaciones</p>
-
-        <!-- BOTONES LOGIN / REGISTRO -->
-        <div class="mt-4 d-flex gap-3 justify-content-center">
-            <a th:href="@{/login}" class="btn btn-primary btn-lg">
-                🔐 Iniciar Sesión
-            </a>
-            <a th:href="@{/registro}" class="btn btn-success btn-lg">
-                📝 Registrarse
-            </a>
-        </div>
-    </div>
-
     <!-- TARJETAS PRINCIPALES -->
-    <div class="row g-4 justify-content-center">
+<div class="row g-4 justify-content-center">
 
-        <!-- Tarjeta: PREGUNTAS -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow text-center">
-                <div class="card-body d-flex flex-column">
-                    <div class="mb-4">
-                        <span style="font-size: 5rem;">📝</span>
-                    </div>
-                    <h3 class="card-title mb-3">Preguntas</h3>
-                    <p class="card-text text-muted mb-4">
-                        Gestiona todas tus preguntas de diferentes tipos
-                    </p>
-                    <a th:href="@{/gestion-preguntas}" class="btn btn-primary btn-lg mt-auto">
-                        Ir a Preguntas
-                    </a>
+    <!-- Tarjeta: PREGUNTAS -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow text-center">
+            <div class="card-body d-flex flex-column">
+                <div class="mb-4">
+                    <span style="font-size: 5rem;">📝</span>
                 </div>
-            </div>
-        </div>
-
-        <!-- Tarjeta: CATEGORÍAS -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow text-center">
-                <div class="card-body d-flex flex-column">
-                    <div class="mb-4">
-                        <span style="font-size: 5rem;">🏷️</span>
-                    </div>
-                    <h3 class="card-title mb-3">Categorías</h3>
-                    <p class="card-text text-muted mb-4">
-                        Organiza tus preguntas por temáticas
-                    </p>
-                    <a th:href="@{/categorias}" class="btn btn-info btn-lg mt-auto">
-                        Ir a Categorías
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tarjeta: TESTS -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow text-center border-danger">
-                <div class="card-body d-flex flex-column">
-                    <div class="mb-4">
-                        <span style="font-size: 5rem;">🎯</span>
-                    </div>
-                    <h3 class="card-title mb-3">Tests</h3>
-                    <p class="card-text text-muted mb-4">
-                        Realiza evaluaciones y ve tus resultados
-                    </p>
-                    <a th:href="@{/tests}" class="btn btn-danger btn-lg mt-auto">
-                        Ir a Tests
-                    </a>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- SECCIÓN ADICIONAL -->
-    <div class="row mt-5">
-        <div class="col-12">
-            <div class="card bg-light">
-                <div class="card-body text-center">
-                    <h5 class="card-title">🔌 Recursos Adicionales</h5>
-                    <p class="card-text text-muted">Accede a herramientas y documentación</p>
-                    <div class="d-flex gap-3 justify-content-center flex-wrap">
-                        <a th:href="@{/swagger-ui.html}"
-                           class="btn btn-outline-secondary"
-                           target="_blank">
-                            📖 API Docs (Swagger)
-                        </a>
-                        <a th:href="@{/preguntas/importar}"
-                           class="btn btn-outline-secondary">
-                            📤 Importar CSV
-                        </a>
-                        <a th:href="@{/api-externa}"
-                           class="btn btn-outline-secondary">
-                            🌐 Importar desde API Externa
-                        </a>
-                    </div>
-                </div>
+                <h3 class="card-title mb-3">Preguntas</h3>
+                <p class="card-text text-muted mb-4">
+                    Gestiona todas tus preguntas de diferentes tipos
+                </p>
+                <a th:href="@{/gestion-preguntas}" class="btn btn-primary btn-lg mt-auto">
+                    Ir a Preguntas
+                </a>
             </div>
         </div>
     </div>
 
+    <!-- Tarjeta: CATEGORÍAS -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow text-center">
+            <div class="card-body d-flex flex-column">
+                <div class="mb-4">
+                    <span style="font-size: 5rem;">🏷️</span>
+                </div>
+                <h3 class="card-title mb-3">Categorías</h3>
+                <p class="card-text text-muted mb-4">
+                    Organiza tus preguntas por temáticas
+                </p>
+                <a th:href="@{/categorias}" class="btn btn-info btn-lg mt-auto">
+                    Ir a Categorías
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- SECCIÓN ADICIONAL — solo ADMIN -->
+<div class="row mt-5" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <div class="col-12" sec:authorize="hasRole('ADMIN')">
+        <div class="card bg-light">
+            <div class="card-body text-center">
+                <h5 class="card-title">🔌 Recursos Adicionales</h5>
+                <p class="card-text text-muted">Accede a herramientas y documentación</p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a th:href="@{/swagger-ui.html}"
+                       class="btn btn-outline-secondary"
+                       target="_blank">
+                        📖 API Docs (Swagger)
+                    </a>
+                    <a th:href="@{/preguntas/importar}"
+                       class="btn btn-outline-secondary">
+                        📤 Importar CSV
+                    </a>
+                    <a th:href="@{/api-externa}"
+                       class="btn btn-outline-secondary">
+                        🌐 Importar desde API Externa
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>

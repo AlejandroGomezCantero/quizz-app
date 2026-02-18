@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Preguntas Verdadero/Falso - Quiz App</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -12,41 +12,65 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="container mt-4">
-    
+
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>📝 Preguntas Verdadero/Falso</h1>
-        <a th:href="@{/preguntas/vf/nueva}" class="btn btn-primary">
-            ➕ Nueva Pregunta V/F
-        </a>
+        <h1>📋 Preguntas Verdadero/Falso</h1>
+        <div sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/preguntas/vf/nueva}" class="btn btn-primary">
+                ➕ Nueva Pregunta V/F
+            </a>
+        </div>
     </div>
 
-    <!-- Mensajes -->
     <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show">
         <span th:text="${mensajeExito}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
-
     <div th:if="${mensajeError}" class="alert alert-danger alert-dismissible fade show">
         <span th:text="${mensajeError}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 
-    <p class="text-muted">
-        Total: <strong th:text="${totalElementos}">0</strong> preguntas
-    </p>
+    <!-- FILTROS -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form th:action="@{/preguntas/vf}" method="get" class="row g-3">
+                <div class="col-md-5">
+                    <input type="text" class="form-control"
+                           name="texto" th:value="${texto}"
+                           placeholder="Buscar por enunciado...">
+                </div>
+                <div class="col-md-4">
+                    <select class="form-select" name="categoriaId">
+                        <option value="">Todas las categorías</option>
+                        <option th:each="cat : ${categorias}"
+                                th:value="${cat.id}"
+                                th:text="${cat.nombre}"
+                                th:selected="${cat.id == categoriaId}">
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">🔍 Filtrar</button>
+                    <a th:href="@{/preguntas/vf}" class="btn btn-secondary">✖ Limpiar</a>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    <!-- Tabla -->
+    <p class="text-muted">Total: <strong th:text="${totalElementos}">0</strong> preguntas</p>
+
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead class="table-dark">
                         <tr>
-                            <th style="width: 5%">ID</th>
-                            <th style="width: 40%">Enunciado</th>
-                            <th style="width: 15%">Categoría</th>
-                            <th style="width: 15%">Respuesta</th>
-                            <th style="width: 25%">Acciones</th>
+                            <th>ID</th>
+                            <th>Enunciado</th>
+                            <th>Categoría</th>
+                            <th>Respuesta</th>
+                            <th sec:authorize="hasRole('ADMIN')">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,34 +79,27 @@
                                 No hay preguntas. ¡Crea una nueva!
                             </td>
                         </tr>
-                        
                         <tr th:each="pregunta : ${preguntas}">
                             <td th:text="${pregunta.id}">1</td>
-                            <td th:text="${pregunta.enunciado}">La Tierra es redonda</td>
+                            <td th:text="${pregunta.enunciado}">Enunciado</td>
                             <td>
-                                <span class="badge bg-info" 
-                                      th:text="${pregunta.categoria?.nombre}">Ciencia</span>
+                                <span class="badge bg-info"
+                                      th:text="${pregunta.categoria?.nombre}">Categoría</span>
                             </td>
                             <td>
-                                <span th:if="${pregunta.respuestaCorrecta}" 
+                                <span th:if="${pregunta.respuestaCorrecta}"
                                       class="badge bg-success">✅ Verdadero</span>
-                                <span th:unless="${pregunta.respuestaCorrecta}" 
+                                <span th:unless="${pregunta.respuestaCorrecta}"
                                       class="badge bg-danger">❌ Falso</span>
                             </td>
-                            <td>
-                                <a th:href="@{/preguntas/vf/ver/{id}(id=${pregunta.id})}" 
-                                   class="btn btn-sm btn-info" title="Ver">
-                                    👁️ Ver
-                                </a>
-                                <a th:href="@{/preguntas/vf/editar/{id}(id=${pregunta.id})}" 
-                                   class="btn btn-sm btn-warning" title="Editar">
-                                    ✏️
-                                </a>
-                                <a th:href="@{/preguntas/vf/eliminar/{id}(id=${pregunta.id})}" 
-                                   class="btn btn-sm btn-danger" title="Eliminar"
-                                   onclick="return confirm('¿Eliminar esta pregunta?')">
-                                    🗑️
-                                </a>
+                            <td sec:authorize="hasRole('ADMIN')">
+                                <a th:href="@{/preguntas/vf/ver/{id}(id=${pregunta.id})}"
+                                   class="btn btn-sm btn-info">👁️ Ver</a>
+                                <a th:href="@{/preguntas/vf/editar/{id}(id=${pregunta.id})}"
+                                   class="btn btn-sm btn-warning">✏️</a>
+                                <a th:href="@{/preguntas/vf/eliminar/{id}(id=${pregunta.id})}"
+                                   class="btn btn-sm btn-danger"
+                                   onclick="return confirm('¿Eliminar?')">🗑️</a>
                             </td>
                         </tr>
                     </tbody>
@@ -91,17 +108,16 @@
         </div>
     </div>
 
-    <!-- Paginación -->
     <nav th:if="${totalPaginas > 1}" class="mt-4">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:classappend="${paginaActual == 0} ? 'disabled'">
                 <a class="page-link" th:href="@{/preguntas/vf(page=${paginaActual - 1})}">Anterior</a>
             </li>
-            <li class="page-item" 
+            <li class="page-item"
                 th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}"
                 th:classappend="${i == paginaActual} ? 'active'">
-                <a class="page-link" 
-                   th:href="@{/preguntas/vf(page=${i})}" 
+                <a class="page-link"
+                   th:href="@{/preguntas/vf(page=${i})}"
                    th:text="${i + 1}">1</a>
             </li>
             <li class="page-item" th:classappend="${paginaActual == totalPaginas - 1} ? 'disabled'">
@@ -110,46 +126,6 @@
         </ul>
     </nav>
 
-</div>
-
-<!-- FILTROS -->
-<div class="card mb-4">
-    <div class="card-body">
-        <form th:action="@{/preguntas/vf}" method="get" class="row g-3">
-            
-            <!-- Búsqueda por texto -->
-            <div class="col-md-5">
-                <input type="text" 
-                       class="form-control" 
-                       name="texto"
-                       th:value="${texto}"
-                       placeholder="Buscar por enunciado...">
-            </div>
-
-            <!-- Filtro por categoría -->
-            <div class="col-md-4">
-                <select class="form-select" name="categoriaId">
-                    <option value="">Todas las categorías</option>
-                    <option th:each="cat : ${categorias}"
-                            th:value="${cat.id}"
-                            th:text="${cat.nombre}"
-                            th:selected="${cat.id == categoriaId}">
-                    </option>
-                </select>
-            </div>
-
-            <!-- Botones -->
-            <div class="col-md-3 d-flex gap-2">
-                <button type="submit" class="btn btn-primary">
-                    🔍 Filtrar
-                </button>
-                <a th:href="@{/preguntas/vf}" class="btn btn-secondary">
-                    ✖ Limpiar
-                </a>
-            </div>
-
-        </form>
-    </div>
 </div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>

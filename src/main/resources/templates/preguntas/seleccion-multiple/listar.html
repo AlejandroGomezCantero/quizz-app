@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Preguntas Selección Múltiple - Quiz App</title>
@@ -11,108 +12,46 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="container mt-4">
-    
+
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>📝 Preguntas Selección Múltiple</h1>
-        <a th:href="@{/preguntas/seleccion-multiple/nueva}" class="btn btn-warning">
-            ➕ Nueva Pregunta
-        </a>
+        <h1>📋 Preguntas Selección Múltiple</h1>
+        <div sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/preguntas/seleccion-multiple/nueva}" class="btn btn-warning">
+                ➕ Nueva Pregunta
+            </a>
+        </div>
     </div>
 
-    <!-- Mensajes -->
     <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show">
         <span th:text="${mensajeExito}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
-
     <div th:if="${mensajeError}" class="alert alert-danger alert-dismissible fade show">
         <span th:text="${mensajeError}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 
-    <p class="text-muted">Total: <strong th:text="${totalElementos}">0</strong> preguntas</p>
-
-    <!-- Tabla -->
-    <div class="card">
+    <!-- FILTROS -->
+    <div class="card mb-4">
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th style="width: 5%">ID</th>
-                            <th style="width: 25%">Enunciado</th>
-                            <th style="width: 10%">Categoría</th>
-                            <th style="width: 35%">Opciones</th>
-                            <th style="width: 15%">Correctas</th>
-                            <th style="width: 10%">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:if="${#lists.isEmpty(preguntas)}">
-                            <td colspan="6" class="text-center text-muted">
-                                No hay preguntas. ¡Crea una nueva!
-                            </td>
-                        </tr>
-                        
-                        <tr th:each="pregunta : ${preguntas}">
-                            <td th:text="${pregunta.id}">1</td>
-                            <td th:text="${#strings.abbreviate(pregunta.enunciado, 50)}">¿Cuáles son frutas?</td>
-                            <td>
-                                <span class="badge bg-info" 
-                                      th:text="${pregunta.categoria?.nombre}">Ciencia</span>
-                            </td>
-                            <td>
-                                <small>
-                                    <strong>A:</strong> <span th:text="${pregunta.opcionA}">Manzana</span><br>
-                                    <strong>B:</strong> <span th:text="${pregunta.opcionB}">Tomate</span><br>
-                                    <strong>C:</strong> <span th:text="${pregunta.opcionC}">Lechuga</span><br>
-                                    <strong>D:</strong> <span th:text="${pregunta.opcionD}">Pera</span>
-                                </small>
-                            </td>
-                            <td>
-                                <!-- Mostrar badges de respuestas correctas -->
-                                <span th:each="resp : ${pregunta.respuestasCorrectas}"
-                                      class="badge bg-success me-1"
-                                      th:text="${resp}">A</span>
-                            </td>
-                            <td>
-                                <a th:href="@{/preguntas/seleccion-multiple/ver/{id}(id=${pregunta.id})}" 
-                                   class="btn btn-sm btn-info">👁️</a>
-                                <a th:href="@{/preguntas/seleccion-multiple/editar/{id}(id=${pregunta.id})}" 
-                                   class="btn btn-sm btn-warning">✏️</a>
-                                <a th:href="@{/preguntas/seleccion-multiple/eliminar/{id}(id=${pregunta.id})}" 
-                                   class="btn btn-sm btn-danger"
-                                   onclick="return confirm('¿Eliminar?')">🗑️</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Paginación -->
-    <nav th:if="${totalPaginas > 1}" class="mt-4">
-        <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${paginaActual == 0} ? 'disabled'">
-                <a class="page-link" th:href="@{/preguntas/seleccion-multiple(page=${paginaActual - 1})}">Anterior</a>
-            </li>
-            <li class="page-item" 
-                th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}"
-                th:classappend="${i == paginaActual} ? 'active'">
-                <a class="page-link" 
-                   th:href="@{/preguntas/seleccion-multiple(page=${i})}" 
-                   th:text="${i + 1}">1</a>
-            </li>
-            <li class="page-item" th:classappend="${paginaActual == totalPaginas - 1} ? 'disabled'">
-                <a class="page-link" th:href="@{/preguntas/seleccion-multiple(page=${paginaActual + 1})}">Siguiente</a>
-            </li>
-        </ul>
-    </nav>
-
-</div>
-
-<div th:replace="~{fragments/footer :: footer}"></div>
-<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-</body>
-</html>
+            <form th:action="@{/preguntas/seleccion-multiple}" method="get" class="row g-3">
+                <div class="col-md-5">
+                    <input type="text" class="form-control"
+                           name="texto" th:value="${texto}"
+                           placeholder="Buscar por enunciado...">
+                </div>
+                <div class="col-md-4">
+                    <select class="form-select" name="categoriaId">
+                        <option value="">Todas las categorías</option>
+                        <option th:each="cat : ${categorias}"
+                                th:value="${cat.id}"
+                                th:text="${cat.nombre}"
+                                th:selected="${cat.id == categoriaId}">
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">🔍 Filtrar</button>
+                    <a th:href="@{/preguntas/seleccion-multiple}" class="btn btn-secondary">✖ Limpiar</a>
+                </div>
+            </form>

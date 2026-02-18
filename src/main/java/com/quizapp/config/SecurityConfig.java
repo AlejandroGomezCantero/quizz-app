@@ -27,14 +27,27 @@ public class SecurityConfig {
         http
             .userDetailsService(usuarioService) // ← AÑADIR ESTA LÍNEA
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/", "/login", "/registro",
-                    "/css/**", "/js/**", "/images/**",
-                    "/error/**", "/swagger-ui/**",
-                    "/swagger-ui.html", "/api-docs/**", "/api/**", "/api-externa/**"
-                ).permitAll()
-                .anyRequest().authenticated()
-            )
+            	    .requestMatchers(
+            	        "/", "/login",
+            	        "/css/**", "/js/**", "/images/**",
+            	        "/error/**", "/swagger-ui/**",
+            	        "/swagger-ui.html", "/api-docs/**", "/api/**", "/generar-password", "/api/auth/**"
+            	    ).permitAll()
+            	    // Solo ADMIN puede crear, editar, eliminar
+            	    .requestMatchers(
+            	        "/categorias/nueva", "/categorias/editar/**",
+            	        "/categorias/eliminar/**", "/categorias/guardar",
+            	        "/preguntas/vf/nueva", "/preguntas/vf/editar/**",
+            	        "/preguntas/vf/eliminar/**", "/preguntas/vf/guardar",
+            	        "/preguntas/seleccion-unica/nueva", "/preguntas/seleccion-unica/editar/**",
+            	        "/preguntas/seleccion-unica/eliminar/**", "/preguntas/seleccion-unica/guardar",
+            	        "/preguntas/seleccion-multiple/nueva", "/preguntas/seleccion-multiple/editar/**",
+            	        "/preguntas/seleccion-multiple/eliminar/**", "/preguntas/seleccion-multiple/guardar",
+            	        "/preguntas/importar/**", "/api-externa/**"
+            	    ).hasRole("ADMIN")
+            	    // Todo lo demás requiere estar autenticado
+            	    .anyRequest().authenticated()
+            	)
             .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/login-process")
@@ -51,6 +64,9 @@ public class SecurityConfig {
                 .deleteCookies("JSESSIONID")
                 .permitAll()
             )
+            .exceptionHandling(ex -> ex
+            	    .accessDeniedPage("/error/403")
+            	)
             .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"));
 
         return http.build();
