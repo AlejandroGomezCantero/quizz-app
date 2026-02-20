@@ -17,7 +17,7 @@ public interface PreguntaSeleccionUnicaRepository extends JpaRepository<Pregunta
     @Query("SELECT p FROM PreguntaSeleccionUnica p WHERE LOWER(p.enunciado) LIKE LOWER(CONCAT('%', :texto, '%'))")
     Page<PreguntaSeleccionUnica> buscarPorTexto(@Param("texto") String texto, Pageable pageable);
 
-    // NUEVO — filtro combinado
+
     @Query("SELECT p FROM PreguntaSeleccionUnica p WHERE " +
            "(:categoriaId IS NULL OR p.categoria.id = :categoriaId) AND " +
            "(:texto IS NULL OR LOWER(p.enunciado) LIKE LOWER(CONCAT('%', :texto, '%')))")

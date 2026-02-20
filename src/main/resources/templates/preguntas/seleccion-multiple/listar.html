@@ -14,10 +14,10 @@
 <div class="container mt-4">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>📋 Preguntas Selección Múltiple</h1>
+        <h1>Preguntas Selección Múltiple</h1>
         <div sec:authorize="hasRole('ADMIN')">
             <a th:href="@{/preguntas/seleccion-multiple/nueva}" class="btn btn-warning">
-                ➕ Nueva Pregunta
+                Nueva Pregunta
             </a>
         </div>
     </div>
@@ -51,7 +51,95 @@
                     </select>
                 </div>
                 <div class="col-md-3 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary">🔍 Filtrar</button>
-                    <a th:href="@{/preguntas/seleccion-multiple}" class="btn btn-secondary">✖ Limpiar</a>
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                    <a th:href="@{/preguntas/seleccion-multiple}" class="btn btn-secondary">Limpiar</a>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <p class="text-muted">Total: <strong th:text="${totalElementos}">0</strong> preguntas</p>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Enunciado</th>
+                            <th>Categoría</th>
+                            <th>Opciones</th>
+                            <th>Correctas</th>
+                            <th sec:authorize="hasRole('ADMIN')">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(preguntas)}">
+                            <td colspan="6" class="text-center text-muted py-4">
+                                No hay preguntas. ¡Crea una nueva!
+                            </td>
+                        </tr>
+                        <tr th:each="pregunta : ${preguntas}">
+                            <td th:text="${pregunta.id}">1</td>
+                            <td th:text="${pregunta.enunciado}">Enunciado</td>
+                            <td>
+                                <span class="badge bg-warning text-dark"
+                                      th:text="${pregunta.categoria?.nombre}">Categoría</span>
+                            </td>
+                            <td>
+                                <small>
+                                    <strong>A:</strong> <span th:text="${pregunta.opcionA}"></span><br>
+                                    <strong>B:</strong> <span th:text="${pregunta.opcionB}"></span><br>
+                                    <strong>C:</strong> <span th:text="${pregunta.opcionC}"></span><br>
+                                    <strong>D:</strong> <span th:text="${pregunta.opcionD}"></span>
+                                </small>
+                            </td>
+                            <td>
+                                <span th:each="correcta : ${pregunta.respuestasCorrectas}"
+                                      class="badge bg-success me-1"
+                                      th:text="${correcta}">A</span>
+                            </td>
+                            <td sec:authorize="hasRole('ADMIN')">
+                                <a th:href="@{/preguntas/seleccion-multiple/ver/{id}(id=${pregunta.id})}"
+                                   class="btn btn-sm btn-info">👁️</a>
+                                <a th:href="@{/preguntas/seleccion-multiple/editar/{id}(id=${pregunta.id})}"
+                                   class="btn btn-sm btn-warning">✏️</a>
+                                <a th:href="@{/preguntas/seleccion-multiple/eliminar/{id}(id=${pregunta.id})}"
+                                   class="btn btn-sm btn-danger"
+                                   onclick="return confirm('¿Eliminar?')">🗑️</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGINACIÓN -->
+    <nav th:if="${totalPaginas > 1}" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${paginaActual == 0} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/preguntas/seleccion-multiple(page=${paginaActual - 1})}">Anterior</a>
+            </li>
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}"
+                th:classappend="${i == paginaActual} ? 'active'">
+                <a class="page-link"
+                   th:href="@{/preguntas/seleccion-multiple(page=${i})}"
+                   th:text="${i + 1}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${paginaActual == totalPaginas - 1} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/preguntas/seleccion-multiple(page=${paginaActual + 1})}">Siguiente</a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

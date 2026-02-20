@@ -1,85 +1,284 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz App - Inicio</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: #0a0a0f;
+            color: #e8e8f0;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        /* Fondo con gradiente animado sutil */
+        .hero {
+            min-height: calc(100vh - 60px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 40px 20px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 20% 50%, rgba(99,102,241,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 80% at 80% 30%, rgba(16,185,129,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 40% at 60% 80%, rgba(245,158,11,0.06) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* Grid decorativo de puntos */
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 750px;
+        }
+
+        /* Badge de bienvenida */
+        .welcome-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(99,102,241,0.15);
+            border: 1px solid rgba(99,102,241,0.3);
+            color: #a5b4fc;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            margin-bottom: 32px;
+            animation: fadeDown 0.6s ease both;
+        }
+
+        .welcome-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: #6366f1;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* Título principal */
+        .hero-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            animation: fadeUp 0.7s ease 0.1s both;
+        }
+
+        .hero-title .line1 { display: block; color: #f1f1f8; }
+        .hero-title .line2 {
+            display: block;
+            background: linear-gradient(90deg, #6366f1, #10b981, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Subtítulo */
+        .hero-subtitle {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: #6b7280;
+            line-height: 1.7;
+            margin-bottom: 48px;
+            animation: fadeUp 0.7s ease 0.2s both;
+        }
+
+        /* Stats row */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 56px;
+            animation: fadeUp 0.7s ease 0.3s both;
+        }
+
+        .stat-item {
+            padding: 0 36px;
+            border-right: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+        }
+        .stat-item:last-child { border-right: none; }
+
+        .stat-number {
+            font-family: 'Syne', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #f1f1f8;
+            display: block;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Botón CTA */
+        .cta-area {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeUp 0.7s ease 0.4s both;
+        }
+
+        .btn-cta-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #6366f1;
+            color: white;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 15px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.01em;
+        }
+        .btn-cta-primary:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99,102,241,0.35);
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-cta-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            color: #9ca3af;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-weight: 400;
+            font-size: 15px;
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.2s ease;
+        }
+        .btn-cta-ghost:hover {
+            background: rgba(255,255,255,0.05);
+            color: #e8e8f0;
+            border-color: rgba(255,255,255,0.2);
+            text-decoration: none;
+        }
+
+        /* Decoración: línea horizontal */
+        .divider-line {
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(99,102,241,0.5), transparent);
+            margin: 0 auto 20px;
+            animation: fadeUp 0.7s ease 0.35s both;
+        }
+
+        /* Animaciones */
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.3; }
+        }
+
+        /* Navbar override para que combine */
+        .navbar { background: rgba(10,10,15,0.95) !important; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    </style>
 </head>
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="container mt-5">
+<section class="hero">
+    <div class="hero-content">
 
-    <!-- TARJETAS PRINCIPALES -->
-<div class="row g-4 justify-content-center">
-
-    <!-- Tarjeta: PREGUNTAS -->
-    <div class="col-md-6 col-lg-4">
-        <div class="card h-100 shadow text-center">
-            <div class="card-body d-flex flex-column">
-                <div class="mb-4">
-                    <span style="font-size: 5rem;">📝</span>
-                </div>
-                <h3 class="card-title mb-3">Preguntas</h3>
-                <p class="card-text text-muted mb-4">
-                    Gestiona todas tus preguntas de diferentes tipos
-                </p>
-                <a th:href="@{/gestion-preguntas}" class="btn btn-primary btn-lg mt-auto">
-                    Ir a Preguntas
-                </a>
-            </div>
+        <!-- Badge bienvenida -->
+        <div class="welcome-badge">
+            <span class="dot"></span>
+            Bienvenido, <strong sec:authentication="name">Usuario</strong>
         </div>
-    </div>
 
-    <!-- Tarjeta: CATEGORÍAS -->
-    <div class="col-md-6 col-lg-4">
-        <div class="card h-100 shadow text-center">
-            <div class="card-body d-flex flex-column">
-                <div class="mb-4">
-                    <span style="font-size: 5rem;">🏷️</span>
-                </div>
-                <h3 class="card-title mb-3">Categorías</h3>
-                <p class="card-text text-muted mb-4">
-                    Organiza tus preguntas por temáticas
-                </p>
-                <a th:href="@{/categorias}" class="btn btn-info btn-lg mt-auto">
-                    Ir a Categorías
-                </a>
+        <!-- Título -->
+        <h1 class="hero-title">
+            <span class="line1">Gestión de</span>
+            <span class="line2">Quiz App</span>
+        </h1>
+
+        <!-- Subtítulo -->
+        <p class="hero-subtitle">
+            Crea, gestiona e importa preguntas de todos los tipos.<br>
+            Usa el menú superior para navegar por la aplicación.
+        </p>
+
+        <div class="divider-line"></div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-item">
+                <span class="stat-number">3</span>
+                <span class="stat-label">Tipos de preguntas</span>
             </div>
-        </div>
-    </div>
-
-</div>
-
-<!-- SECCIÓN ADICIONAL — solo ADMIN -->
-<div class="row mt-5" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <div class="col-12" sec:authorize="hasRole('ADMIN')">
-        <div class="card bg-light">
-            <div class="card-body text-center">
-                <h5 class="card-title">🔌 Recursos Adicionales</h5>
-                <p class="card-text text-muted">Accede a herramientas y documentación</p>
-                <div class="d-flex gap-3 justify-content-center flex-wrap">
-                    <a th:href="@{/swagger-ui.html}"
-                       class="btn btn-outline-secondary"
-                       target="_blank">
-                        📖 API Docs (Swagger)
-                    </a>
-                    <a th:href="@{/preguntas/importar}"
-                       class="btn btn-outline-secondary">
-                        📤 Importar CSV
-                    </a>
-                    <a th:href="@{/api-externa}"
-                       class="btn btn-outline-secondary">
-                        🌐 Importar desde API Externa
-                    </a>
-                </div>
+            <div class="stat-item">
+                <span class="stat-number">∞</span>
+                <span class="stat-label">Preguntas posibles</span>
             </div>
+          
         </div>
+
+        <!-- CTAs -->
+        <div class="cta-area">
+            <a th:href="@{/gestion-preguntas}" class="btn-cta-primary">
+                Gestionar preguntas
+            </a>
+            <a th:href="@{/categorias}" class="btn-cta-ghost">
+                Ver categorías
+            </a>
+            <a th:href="@{/preguntas/importar}" class="btn-cta-ghost"
+               sec:authorize="hasRole('ADMIN')">
+                Importar CSV
+            </a>
+        </div>
+
     </div>
-</div>
+</section>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>

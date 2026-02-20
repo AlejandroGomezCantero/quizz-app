@@ -1,5 +1,6 @@
 package com.quizapp.controller.api;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -12,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import com.quizapp.model.entity.PreguntaSeleccionUnica;
 import com.quizapp.service.PreguntaSeleccionUnicaService;
 
-// Controller para preguntas de Selección Única
-// URLs base: /api/seleccion-unica
 @RestController
 @RequestMapping("/api/seleccion-unica")
 public class PreguntaSeleccionUnicaController {
@@ -24,119 +23,105 @@ public class PreguntaSeleccionUnicaController {
         this.service = service;
     }
 
-    // ========== CRUD COMPLETO ==========
+    // ========== CRUD ==========
 
-    // 1. READ - Listar todas
-    // GET http://localhost:8080/api/seleccion-unica
     @GetMapping
     public List<PreguntaSeleccionUnica> listar() {
         return service.findAll();
     }
 
-    // 2. READ - Obtener una por ID
-    // GET http://localhost:8080/api/seleccion-unica/15
     @GetMapping("/{id}")
     public ResponseEntity<PreguntaSeleccionUnica> obtenerPorId(@PathVariable Long id) {
         return service.findById(id)
-                .map(ResponseEntity::ok) // 200 OK
-                .orElse(ResponseEntity.notFound().build()); // 404 Not Found
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // 3. CREATE - Crear nueva pregunta
-    // POST http://localhost:8080/api/seleccion-unica
-    // Body (JSON):
-    // {
-    //   "enunciado": "¿Capital de España?",
-    //   "opcionA": "Barcelona",
-    //   "opcionB": "Madrid",
-    //   "opcionC": "Valencia",
-    //   "opcionCorrecta": "B",
-    //   "categoria": { "id": 3 }
-    // }
     @PostMapping
     public ResponseEntity<PreguntaSeleccionUnica> crear(@RequestBody PreguntaSeleccionUnica pregunta) {
-        PreguntaSeleccionUnica nueva = service.save(pregunta);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nueva); // 201 Created
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(pregunta));
     }
 
-    // 4. UPDATE - Actualizar pregunta existente
-    // PUT http://localhost:8080/api/seleccion-unica/15
     @PutMapping("/{id}")
     public ResponseEntity<PreguntaSeleccionUnica> actualizar(
             @PathVariable Long id,
             @RequestBody PreguntaSeleccionUnica pregunta) {
-        
-        if (!service.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        
+
+        if (!service.existsById(id)) return ResponseEntity.notFound().build();
         pregunta.setId(id);
-        PreguntaSeleccionUnica actualizada = service.save(pregunta);
-        return ResponseEntity.ok(actualizada);
+        return ResponseEntity.ok(service.save(pregunta));
     }
 
-    // 5. DELETE - Eliminar pregunta
-    // DELETE http://localhost:8080/api/seleccion-unica/15
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        if (!service.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        
+        if (!service.existsById(id)) return ResponseEntity.notFound().build();
         service.deleteById(id);
-        return ResponseEntity.noContent().build(); // 204 No Content
+        return ResponseEntity.noContent().build();
     }
 
     // ========== PAGINACIÓN ==========
 
-    // Listar con paginación
-    // GET http://localhost:8080/api/seleccion-unica/paginated?page=0&size=10
     @GetMapping("/paginated")
     public Page<PreguntaSeleccionUnica> listarPaginado(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        
-        Pageable pageable = PageRequest.of(page, size);
-        return service.findAllPaginated(pageable);
+        return service.findAllPaginated(PageRequest.of(page, size));
     }
 
-    // ========== FILTROS ==========
-
-    // Filtrar por categoría
-    // GET http://localhost:8080/api/seleccion-unica/categoria/2?page=0&size=10
     @GetMapping("/categoria/{categoriaId}")
     public Page<PreguntaSeleccionUnica> listarPorCategoria(
             @PathVariable Long categoriaId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        
-        Pageable pageable = PageRequest.of(page, size);
-        return service.findByCategoriaId(categoriaId, pageable);
+        return service.findByCategoriaId(categoriaId, PageRequest.of(page, size));
     }
 
-    // Buscar por texto en el enunciado
-    // GET http://localhost:8080/api/seleccion-unica/buscar?texto=capital&page=0&size=10
     @GetMapping("/buscar")
     public Page<PreguntaSeleccionUnica> buscar(
             @RequestParam String texto,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        
-        Pageable pageable = PageRequest.of(page, size);
-        return service.buscarPorTexto(texto, pageable);
+        return service.buscarPorTexto(texto, PageRequest.of(page, size));
     }
 
-    // ========== INFORMACIÓN ==========
+    // ========== RANDOM — usado por el React ==========
 
-    // Contar todas las preguntas
-    // GET http://localhost:8080/api/seleccion-unica/count
+    // GET /api/seleccion-unica/random?cantidad=5
+    // GET /api/seleccion-unica/random?cantidad=5&categoriaId=2
+    @GetMapping("/random")
+    public ResponseEntity<?> getRandom(
+            @RequestParam(defaultValue = "5") int cantidad,
+            @RequestParam(required = false) Long categoriaId) {
+
+        List<PreguntaSeleccionUnica> todas;
+
+        if (categoriaId != null) {
+            Pageable pageable = PageRequest.of(0, 1000);
+            todas = service.findByCategoriaId(categoriaId, pageable).getContent();
+        } else {
+            todas = service.findAll();
+        }
+
+        if (todas.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No hay preguntas de selección única disponibles");
+        }
+
+        Collections.shuffle(todas);
+        List<PreguntaSeleccionUnica> resultado = todas.stream()
+                .limit(cantidad)
+                .toList();
+
+        return ResponseEntity.ok(resultado);
+    }
+
+    // ========== INFO ==========
+
     @GetMapping("/count")
     public long contar() {
         return service.count();
     }
 
-    // Contar preguntas de una categoría
-    // GET http://localhost:8080/api/seleccion-unica/count/categoria/2
     @GetMapping("/count/categoria/{categoriaId}")
     public long contarPorCategoria(@PathVariable Long categoriaId) {
         return service.countByCategoriaId(categoriaId);

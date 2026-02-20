@@ -3,132 +3,213 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Preguntas Selección Única - Quiz App</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #0a0a0f; color: #e8e8f0; font-family: 'Inter', sans-serif; min-height: 100vh; }
+        .page-wrapper { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+        .page-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);
+            color: #a5b4fc; padding: 6px 16px; border-radius: 999px;
+            font-size: 13px; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 24px;
+        }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+        .page-title { font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800; color: #f1f1f8; letter-spacing: -0.02em; }
+        .btn-cta-primary {
+            background: #6366f1; color: white; padding: 10px 24px; border-radius: 8px;
+            font-size: 14px; font-weight: 500; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-cta-primary:hover { background: #4f46e5; color: white; transform: translateY(-1px); }
+        .dark-card {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; padding: 24px; margin-bottom: 20px;
+        }
+        .filter-input {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: #e8e8f0; padding: 10px 16px; border-radius: 8px; width: 100%; font-size: 14px;
+        }
+        .filter-input::placeholder { color: #6b7280; }
+        .filter-input:focus { outline: none; border-color: rgba(99,102,241,0.5); }
+        .filter-select {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: #e8e8f0; padding: 10px 16px; border-radius: 8px; width: 100%; font-size: 14px;
+        }
+        .filter-select option { background: #1a1a2e; color: #e8e8f0; }
+        .btn-filter {
+            background: #6366f1; color: white; padding: 10px 20px; border-radius: 8px;
+            font-size: 14px; border: none; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-filter:hover { background: #4f46e5; }
+        .btn-clear {
+            background: transparent; border: 1px solid rgba(255,255,255,0.1);
+            color: #9ca3af; padding: 10px 20px; border-radius: 8px; font-size: 14px;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .btn-clear:hover { background: rgba(255,255,255,0.05); color: #e8e8f0; }
+        .total-text { color: #6b7280; font-size: 14px; margin-bottom: 16px; }
+        .dark-table { width: 100%; border-collapse: collapse; }
+        .dark-table thead tr { border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .dark-table th { padding: 12px 16px; font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; text-align: left; }
+        .dark-table td { padding: 14px 16px; font-size: 14px; color: #e8e8f0; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle; }
+        .dark-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+        .badge-categoria {
+            background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3);
+            color: #10b981; padding: 4px 10px; border-radius: 6px; font-size: 12px;
+        }
+        .badge-correcta {
+            background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3);
+            color: #10b981; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;
+        }
+        .opciones-cell { font-size: 12px; color: #9ca3af; line-height: 1.8; }
+        .opciones-cell strong { color: #6b7280; }
+        .btn-sm-info {
+            background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);
+            color: #a5b4fc; padding: 6px 12px; border-radius: 6px; font-size: 12px;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .btn-sm-info:hover { background: rgba(99,102,241,0.25); color: #a5b4fc; }
+        .btn-sm-warning {
+            background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3);
+            color: #f59e0b; padding: 6px 12px; border-radius: 6px; font-size: 12px;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .btn-sm-warning:hover { background: rgba(245,158,11,0.25); color: #f59e0b; }
+        .btn-sm-danger {
+            background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3);
+            color: #ef4444; padding: 6px 12px; border-radius: 6px; font-size: 12px;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .btn-sm-danger:hover { background: rgba(239,68,68,0.25); color: #ef4444; }
+        .alert-success-dark {
+            background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3);
+            color: #10b981; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px;
+        }
+        .alert-danger-dark {
+            background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
+            color: #ef4444; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px;
+        }
+        .pagination-dark { display: flex; justify-content: center; gap: 8px; margin-top: 24px; }
+        .page-btn {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: #9ca3af; padding: 8px 14px; border-radius: 6px; font-size: 14px;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .page-btn:hover { background: rgba(99,102,241,0.2); color: #a5b4fc; border-color: rgba(99,102,241,0.3); }
+        .page-btn.active { background: #6366f1; color: white; border-color: #6366f1; }
+        .page-btn.disabled { opacity: 0.3; pointer-events: none; }
+        .navbar { background: rgba(10,10,15,0.95) !important; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    </style>
 </head>
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="container mt-4">
+<div class="page-wrapper">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>📋 Preguntas Selección Única</h1>
+    <div class="page-badge">Preguntas</div>
+
+    <div class="page-header">
+        <h1 class="page-title">Selección Única</h1>
         <div sec:authorize="hasRole('ADMIN')">
-            <a th:href="@{/preguntas/seleccion-unica/nueva}" class="btn btn-success">
-                ➕ Nueva Pregunta
-            </a>
+            <a th:href="@{/preguntas/seleccion-unica/nueva}" class="btn-cta-primary">Nueva Pregunta</a>
         </div>
     </div>
 
-    <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show">
-        <span th:text="${mensajeExito}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    <div th:if="${mensajeError}" class="alert alert-danger alert-dismissible fade show">
-        <span th:text="${mensajeError}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
+    <div th:if="${mensajeExito}" class="alert-success-dark" th:text="${mensajeExito}"></div>
+    <div th:if="${mensajeError}" class="alert-danger-dark" th:text="${mensajeError}"></div>
 
-    <!-- FILTROS -->
-    <div class="card mb-4">
-        <div class="card-body">
-            <form th:action="@{/preguntas/seleccion-unica}" method="get" class="row g-3">
-                <div class="col-md-5">
-                    <input type="text" class="form-control"
-                           name="texto" th:value="${texto}"
-                           placeholder="Buscar por enunciado...">
-                </div>
-                <div class="col-md-4">
-                    <select class="form-select" name="categoriaId">
-                        <option value="">Todas las categorías</option>
-                        <option th:each="cat : ${categorias}"
-                                th:value="${cat.id}"
-                                th:text="${cat.nombre}"
-                                th:selected="${cat.id == categoriaId}">
-                        </option>
-                    </select>
-                </div>
-                <div class="col-md-3 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary">🔍 Filtrar</button>
-                    <a th:href="@{/preguntas/seleccion-unica}" class="btn btn-secondary">✖ Limpiar</a>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <p class="text-muted">Total: <strong th:text="${totalElementos}">0</strong> preguntas</p>
-
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Enunciado</th>
-                            <th>Categoría</th>
-                            <th>Opciones</th>
-                            <th>Correcta</th>
-                            <th sec:authorize="hasRole('ADMIN')">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:if="${#lists.isEmpty(preguntas)}">
-                            <td colspan="6" class="text-center text-muted">
-                                No hay preguntas. ¡Crea una nueva!
-                            </td>
-                        </tr>
-                        <tr th:each="pregunta : ${preguntas}">
-                            <td th:text="${pregunta.id}">1</td>
-                            <td th:text="${pregunta.enunciado}">Enunciado</td>
-                            <td>
-                                <span class="badge bg-info"
-                                      th:text="${pregunta.categoria?.nombre}">Categoría</span>
-                            </td>
-                            <td>
-                                <small>
-                                    <strong>A:</strong> <span th:text="${pregunta.opcionA}"></span><br>
-                                    <strong>B:</strong> <span th:text="${pregunta.opcionB}"></span><br>
-                                    <strong>C:</strong> <span th:text="${pregunta.opcionC}"></span>
-                                </small>
-                            </td>
-                            <td>
-                                <span class="badge bg-success" th:text="${pregunta.opcionCorrecta}">B</span>
-                            </td>
-                            <td sec:authorize="hasRole('ADMIN')">
-                                <a th:href="@{/preguntas/seleccion-unica/ver/{id}(id=${pregunta.id})}"
-                                   class="btn btn-sm btn-info">👁️</a>
-                                <a th:href="@{/preguntas/seleccion-unica/editar/{id}(id=${pregunta.id})}"
-                                   class="btn btn-sm btn-warning">✏️</a>
-                                <a th:href="@{/preguntas/seleccion-unica/eliminar/{id}(id=${pregunta.id})}"
-                                   class="btn btn-sm btn-danger"
-                                   onclick="return confirm('¿Eliminar?')">🗑️</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+    <div class="dark-card">
+        <form th:action="@{/preguntas/seleccion-unica}" method="get" class="row g-3">
+            <div class="col-md-5">
+                <input type="text" class="filter-input"
+                       name="texto" th:value="${texto}"
+                       placeholder="Buscar por enunciado...">
             </div>
+            <div class="col-md-4">
+                <select class="filter-select" name="categoriaId">
+                    <option value="">Todas las categorías</option>
+                    <option th:each="cat : ${categorias}"
+                            th:value="${cat.id}"
+                            th:text="${cat.nombre}"
+                            th:selected="${cat.id == categoriaId}">
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn-filter">Filtrar</button>
+                <a th:href="@{/preguntas/seleccion-unica}" class="btn-clear">Limpiar</a>
+            </div>
+        </form>
+    </div>
+
+    <p class="total-text">Total: <strong th:text="${totalElementos}">0</strong> preguntas</p>
+
+    <div class="dark-card">
+        <div class="table-responsive">
+            <table class="dark-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Enunciado</th>
+                        <th>Categoría</th>
+                        <th>Opciones</th>
+                        <th>Correcta</th>
+                        <th sec:authorize="hasRole('ADMIN')">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(preguntas)}">
+                        <td colspan="6" style="text-align:center; color:#6b7280; padding:40px">
+                            No hay preguntas. Crea una nueva.
+                        </td>
+                    </tr>
+                    <tr th:each="pregunta : ${preguntas}">
+                        <td th:text="${pregunta.id}">1</td>
+                        <td th:text="${pregunta.enunciado}">Enunciado</td>
+                        <td>
+                            <span class="badge-categoria" th:text="${pregunta.categoria?.nombre}">Categoría</span>
+                        </td>
+                        <td>
+                            <div class="opciones-cell">
+                                <strong>A:</strong> <span th:text="${pregunta.opcionA}"></span><br>
+                                <strong>B:</strong> <span th:text="${pregunta.opcionB}"></span><br>
+                                <strong>C:</strong> <span th:text="${pregunta.opcionC}"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge-correcta" th:text="${pregunta.opcionCorrecta}">B</span>
+                        </td>
+                        <td sec:authorize="hasRole('ADMIN')">
+                            <div class="d-flex gap-2">
+                                <a th:href="@{/preguntas/seleccion-unica/ver/{id}(id=${pregunta.id})}" class="btn-sm-info">👁️</a>
+                                <a th:href="@{/preguntas/seleccion-unica/editar/{id}(id=${pregunta.id})}" class="btn-sm-warning">✏️</a>
+                                <a th:href="@{/preguntas/seleccion-unica/eliminar/{id}(id=${pregunta.id})}"
+                                   class="btn-sm-danger"
+                                   onclick="return confirm('¿Eliminar?')">🗑️</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <nav th:if="${totalPaginas > 1}" class="mt-4">
-        <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${paginaActual == 0} ? 'disabled'">
-                <a class="page-link" th:href="@{/preguntas/seleccion-unica(page=${paginaActual - 1})}">Anterior</a>
-            </li>
-            <li class="page-item"
-                th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}"
-                th:classappend="${i == paginaActual} ? 'active'">
-                <a class="page-link"
-                   th:href="@{/preguntas/seleccion-unica(page=${i})}"
-                   th:text="${i + 1}">1</a>
-            </li>
-            <li class="page-item" th:classappend="${paginaActual == totalPaginas - 1} ? 'disabled'">
-                <a class="page-link" th:href="@{/preguntas/seleccion-unica(page=${paginaActual + 1})}">Siguiente</a>
-            </li>
-        </ul>
+    <nav th:if="${totalPaginas > 1}">
+        <div class="pagination-dark">
+            <a class="page-btn" th:classappend="${paginaActual == 0} ? 'disabled'"
+               th:href="@{/preguntas/seleccion-unica(page=${paginaActual - 1})}">Anterior</a>
+            <a class="page-btn" th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}"
+               th:classappend="${i == paginaActual} ? 'active'"
+               th:href="@{/preguntas/seleccion-unica(page=${i})}"
+               th:text="${i + 1}">1</a>
+            <a class="page-btn" th:classappend="${paginaActual == totalPaginas - 1} ? 'disabled'"
+               th:href="@{/preguntas/seleccion-unica(page=${paginaActual + 1})}">Siguiente</a>
+        </div>
     </nav>
 
 </div>

@@ -34,7 +34,7 @@
 
             <!-- Mensaje de error técnico (si existe) -->
             <div th:if="${errorMessage}" class="alert alert-danger text-start" role="alert">
-                <h5 class="alert-heading">🔧 Información técnica:</h5>
+                <h5 class="alert-heading">Información técnica:</h5>
                 <hr>
                 <p class="mb-0">
                     <code th:text="${errorMessage}">Error message</code>
@@ -43,7 +43,7 @@
 
             <!-- Información adicional -->
             <div class="alert alert-info" role="alert">
-                <strong>ℹ️ Qué puedes hacer:</strong>
+                <strong>Qué puedes hacer:</strong>
                 <ul class="text-start mb-0">
                     <li>Espera unos minutos e intenta de nuevo</li>
                     <li>Verifica que todos los servicios estén funcionando</li>
@@ -54,13 +54,13 @@
             <!-- Botones de acción -->
             <div class="mt-4">
                 <a th:href="@{/}" class="btn btn-primary btn-lg me-2">
-                    🏠 Volver al Inicio
+                    Volver al Inicio
                 </a>
                 <a href="javascript:location.reload()" class="btn btn-warning btn-lg me-2">
-                    🔄 Reintentar
+                    Reintentar
                 </a>
                 <a href="javascript:history.back()" class="btn btn-secondary btn-lg">
-                    ⬅️ Página Anterior
+                    Página Anterior
                 </a>
             </div>
 

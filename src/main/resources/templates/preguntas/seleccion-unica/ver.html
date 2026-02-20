@@ -1,83 +1,141 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Ver Pregunta - Quiz App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Pregunta Selección Única - Quiz App</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #0a0a0f; color: #e8e8f0; font-family: 'Inter', sans-serif; min-height: 100vh; }
+        .page-wrapper { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+        .page-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);
+            color: #a5b4fc; padding: 6px 16px; border-radius: 999px;
+            font-size: 13px; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 24px;
+        }
+        .page-title {
+            font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800;
+            color: #f1f1f8; margin-bottom: 32px; letter-spacing: -0.02em;
+        }
+        .dark-card {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; padding: 32px; margin-bottom: 20px;
+        }
+        .dark-card-header {
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding-bottom: 16px; margin-bottom: 24px;
+            font-family: 'Syne', sans-serif; font-size: 1rem;
+            color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em;
+        }
+        .field-label { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+        .field-value { font-size: 1.1rem; color: #e8e8f0; margin-bottom: 24px; line-height: 1.6; }
+        .badge-categoria {
+            background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3);
+            color: #10b981; padding: 6px 14px; border-radius: 6px; font-size: 14px;
+        }
+        .opcion-item {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px; padding: 12px 16px; margin-bottom: 8px;
+            display: flex; align-items: center; gap: 12px; font-size: 14px; color: #e8e8f0;
+        }
+        .opcion-item.correcta {
+            background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.3);
+        }
+        .opcion-letra {
+            background: rgba(255,255,255,0.08); color: #9ca3af;
+            width: 28px; height: 28px; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 600; flex-shrink: 0;
+        }
+        .opcion-item.correcta .opcion-letra { background: rgba(16,185,129,0.2); color: #10b981; }
+        .badge-correcta {
+            background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3);
+            color: #10b981; padding: 10px 24px; border-radius: 8px; font-size: 1rem; display: inline-block;
+        }
+        .btn-dark-warning {
+            background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3);
+            color: #f59e0b; padding: 10px 24px; border-radius: 8px; font-size: 14px;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .btn-dark-warning:hover { background: rgba(245,158,11,0.25); color: #f59e0b; }
+        .btn-dark-danger {
+            background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3);
+            color: #ef4444; padding: 10px 24px; border-radius: 8px; font-size: 14px;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .btn-dark-danger:hover { background: rgba(239,68,68,0.25); color: #ef4444; }
+        .btn-dark-ghost {
+            background: transparent; border: 1px solid rgba(255,255,255,0.1);
+            color: #9ca3af; padding: 10px 24px; border-radius: 8px; font-size: 14px;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .btn-dark-ghost:hover { background: rgba(255,255,255,0.05); color: #e8e8f0; }
+        .navbar { background: rgba(10,10,15,0.95) !important; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    </style>
 </head>
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="container mt-4">
-    
-    <h1>📝 Detalle Pregunta Selección Única</h1>
+<div class="page-wrapper">
 
-    <div class="card mt-4 shadow-sm">
-        <div class="card-header bg-success text-white">
-            <h5 class="mb-0">Pregunta #<span th:text="${pregunta.id}">1</span></h5>
+    <div class="page-badge">Selección Única</div>
+    <h1 class="page-title">Detalle de Pregunta #<span th:text="${pregunta.id}">1</span></h1>
+
+    <div class="dark-card">
+        <div class="dark-card-header">Información de la pregunta</div>
+
+        <div class="field-label">Enunciado</div>
+        <div class="field-value" th:text="${pregunta.enunciado}">¿Cuál es la capital de Francia?</div>
+
+        <div class="field-label">Categoría</div>
+        <div class="field-value">
+            <span th:if="${pregunta.categoria != null}"
+                  class="badge-categoria"
+                  th:text="${pregunta.categoria.nombre}">Geografía</span>
+            <span th:if="${pregunta.categoria == null}" style="color:#6b7280">Sin categoría</span>
         </div>
-        <div class="card-body">
-            
-            <!-- ENUNCIADO -->
-            <div class="mb-4">
-                <h5 class="text-muted mb-2">📄 Enunciado:</h5>
-                <p class="fs-5" th:text="${pregunta.enunciado}">¿Cuál es la capital de Francia?</p>
-            </div>
 
-            <!-- CATEGORÍA -->
-            <div class="mb-4">
-                <h5 class="text-muted mb-2">🏷️ Categoría:</h5>
-                <p>
-                    <span th:if="${pregunta.categoria != null}" 
-                          class="badge bg-info fs-6 px-3 py-2"
-                          th:text="${pregunta.categoria.nombre}">Geografía</span>
-                </p>
+        <div class="field-label">Opciones</div>
+        <div style="margin-bottom: 24px;">
+            <div class="opcion-item" th:classappend="${pregunta.opcionCorrecta == 'A'} ? 'correcta'">
+                <span class="opcion-letra">A</span>
+                <span th:text="${pregunta.opcionA}">Madrid</span>
             </div>
-
-            <!-- OPCIONES -->
-            <div class="mb-4">
-                <h5 class="text-muted mb-2">📋 Opciones:</h5>
-                <div class="list-group">
-                    <div class="list-group-item">
-                        <strong>A)</strong> <span th:text="${pregunta.opcionA}">Madrid</span>
-                    </div>
-                    <div class="list-group-item">
-                        <strong>B)</strong> <span th:text="${pregunta.opcionB}">París</span>
-                    </div>
-                    <div class="list-group-item">
-                        <strong>C)</strong> <span th:text="${pregunta.opcionC}">Londres</span>
-                    </div>
-                </div>
+            <div class="opcion-item" th:classappend="${pregunta.opcionCorrecta == 'B'} ? 'correcta'">
+                <span class="opcion-letra">B</span>
+                <span th:text="${pregunta.opcionB}">París</span>
             </div>
-
-            <!-- RESPUESTA CORRECTA -->
-            <div class="mb-4">
-                <h5 class="text-muted mb-2">✔️ Respuesta Correcta:</h5>
-                <p>
-                    <span class="badge bg-success fs-5 px-4 py-2" 
-                          th:text="'Opción ' + ${pregunta.opcionCorrecta}">Opción B</span>
-                </p>
-                <div class="alert alert-success mt-2">
-                    <strong>Respuesta:</strong> 
-                    <span th:if="${pregunta.opcionCorrecta == 'A'}" th:text="${pregunta.opcionA}"></span>
-                    <span th:if="${pregunta.opcionCorrecta == 'B'}" th:text="${pregunta.opcionB}"></span>
-                    <span th:if="${pregunta.opcionCorrecta == 'C'}" th:text="${pregunta.opcionC}"></span>
-                </div>
+            <div class="opcion-item" th:classappend="${pregunta.opcionCorrecta == 'C'} ? 'correcta'">
+                <span class="opcion-letra">C</span>
+                <span th:text="${pregunta.opcionC}">Londres</span>
             </div>
+        </div>
 
+        <div class="field-label">Respuesta Correcta</div>
+        <div class="field-value">
+            <span class="badge-correcta">
+                Opción <span th:text="${pregunta.opcionCorrecta}">B</span> —
+                <span th:if="${pregunta.opcionCorrecta == 'A'}" th:text="${pregunta.opcionA}"></span>
+                <span th:if="${pregunta.opcionCorrecta == 'B'}" th:text="${pregunta.opcionB}"></span>
+                <span th:if="${pregunta.opcionCorrecta == 'C'}" th:text="${pregunta.opcionC}"></span>
+            </span>
         </div>
     </div>
 
-    <!-- BOTONES -->
-    <div class="d-flex gap-2 mt-4">
-        <a th:href="@{/preguntas/seleccion-unica/editar/{id}(id=${pregunta.id})}" 
-           class="btn btn-warning btn-lg">✏️ Editar</a>
-        <a th:href="@{/preguntas/seleccion-unica/eliminar/{id}(id=${pregunta.id})}" 
-           class="btn btn-danger btn-lg"
+    <div class="d-flex gap-3 mb-4" sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/preguntas/seleccion-unica/editar/{id}(id=${pregunta.id})}" class="btn-dark-warning">✏️ Editar</a>
+        <a th:href="@{/preguntas/seleccion-unica/eliminar/{id}(id=${pregunta.id})}"
+           class="btn-dark-danger"
            onclick="return confirm('¿Eliminar?')">🗑️ Eliminar</a>
-        <a th:href="@{/preguntas/seleccion-unica}" class="btn btn-secondary btn-lg">⬅️ Volver</a>
+    </div>
+    <div class="mb-4">
+        <a th:href="@{/preguntas/seleccion-unica}" class="btn-dark-ghost">⬅️ Volver</a>
     </div>
 
 </div>

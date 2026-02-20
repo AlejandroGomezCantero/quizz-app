@@ -6,126 +6,149 @@
     <title th:text="${titulo} + ' - Quiz App'">Pregunta V/F - Quiz App</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #0a0a0f; color: #e8e8f0; font-family: 'Inter', sans-serif; min-height: 100vh; }
+        .page-wrapper { max-width: 700px; margin: 0 auto; padding: 40px 20px; }
+        .page-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);
+            color: #a5b4fc; padding: 6px 16px; border-radius: 999px;
+            font-size: 13px; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 24px;
+        }
+        .page-title {
+            font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800;
+            color: #f1f1f8; margin-bottom: 32px; letter-spacing: -0.02em;
+        }
+        .dark-card {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; padding: 32px; margin-bottom: 20px;
+        }
+        .field-label {
+            font-size: 13px; color: #9ca3af; margin-bottom: 8px; display: block; font-weight: 500;
+        }
+        .required { color: #ef4444; margin-left: 2px; }
+        .dark-input {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: #e8e8f0; padding: 12px 16px; border-radius: 8px; width: 100%;
+            font-size: 14px; font-family: 'Inter', sans-serif; resize: vertical;
+        }
+        .dark-input::placeholder { color: #6b7280; }
+        .dark-input:focus { outline: none; border-color: rgba(99,102,241,0.5); background: rgba(255,255,255,0.07); }
+        .dark-select {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: #e8e8f0; padding: 12px 16px; border-radius: 8px; width: 100%; font-size: 14px;
+        }
+        .dark-select option { background: #1a1a2e; color: #e8e8f0; }
+        .dark-select:focus { outline: none; border-color: rgba(99,102,241,0.5); }
+        .field-hint { font-size: 12px; color: #6b7280; margin-top: 6px; }
+        .mb-field { margin-bottom: 24px; }
+        .radio-group { display: flex; gap: 16px; margin-top: 8px; }
+        .radio-option {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+            padding: 12px 20px; border-radius: 8px; cursor: pointer; transition: all 0.2s; flex: 1;
+        }
+        .radio-option:has(input:checked) { border-color: rgba(99,102,241,0.4); background: rgba(99,102,241,0.08); }
+        .radio-option input { accent-color: #6366f1; width: 16px; height: 16px; cursor: pointer; }
+        .radio-label { font-size: 14px; color: #e8e8f0; cursor: pointer; }
+        .btn-save {
+            background: #6366f1; color: white; padding: 12px 32px; border-radius: 8px;
+            font-size: 15px; font-weight: 500; border: none; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-save:hover { background: #4f46e5; transform: translateY(-1px); }
+        .btn-cancel {
+            background: transparent; border: 1px solid rgba(255,255,255,0.1);
+            color: #9ca3af; padding: 12px 32px; border-radius: 8px; font-size: 15px;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .btn-cancel:hover { background: rgba(255,255,255,0.05); color: #e8e8f0; }
+        .tips-card {
+            background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.2);
+            border-radius: 12px; padding: 24px; margin-bottom: 20px;
+        }
+        .tips-title { font-size: 14px; color: #a5b4fc; font-weight: 600; margin-bottom: 12px; }
+        .tips-list { list-style: none; padding: 0; margin: 0; }
+        .tips-list li { font-size: 13px; color: #6b7280; padding: 4px 0; }
+        .tips-list li::before { content: '—'; margin-right: 8px; color: #6366f1; }
+        .navbar { background: rgba(10,10,15,0.95) !important; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div th:replace="~{fragments/header :: header}"></div>
 
-<!-- CONTENIDO PRINCIPAL -->
-<div class="container mt-4">
-    
-    <!-- Título dinámico (Nueva o Editar) -->
-    <h1 th:text="${titulo}">Nueva Pregunta Verdadero/Falso</h1>
+<div class="page-wrapper">
 
-    <!-- FORMULARIO -->
-    <div class="card mt-4">
-        <div class="card-body">
-            <form th:action="@{/preguntas/vf/guardar}" 
-                  th:object="${pregunta}" 
-                  method="post">
-                
-                <!-- Campo oculto para el ID -->
-                <input type="hidden" th:field="*{id}" />
+    <div class="page-badge">Verdadero / Falso</div>
+    <h1 class="page-title" th:text="${titulo}">Nueva Pregunta Verdadero/Falso</h1>
 
-                <!-- ENUNCIADO -->
-                <div class="mb-3">
-                    <label for="enunciado" class="form-label">
-                        Enunciado <span class="text-danger">*</span>
+    <div class="dark-card">
+        <form th:action="@{/preguntas/vf/guardar}"
+              th:object="${pregunta}"
+              method="post">
+
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="mb-field">
+                <label class="field-label">Enunciado <span class="required">*</span></label>
+                <textarea class="dark-input"
+                          th:field="*{enunciado}"
+                          rows="4"
+                          placeholder="Ejemplo: La Tierra es el tercer planeta del sistema solar"
+                          required
+                          maxlength="500"></textarea>
+                <p class="field-hint">Escribe la pregunta (máximo 500 caracteres)</p>
+            </div>
+
+            <div class="mb-field">
+                <label class="field-label">Categoría <span class="required">*</span></label>
+                <select class="dark-select" name="categoriaId" required>
+                    <option value="">Selecciona una categoría</option>
+                    <option th:each="cat : ${categorias}"
+                            th:value="${cat.id}"
+                            th:text="${cat.nombre}"
+                            th:selected="${pregunta.categoria != null and pregunta.categoria.id == cat.id}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="mb-field">
+                <label class="field-label">Respuesta Correcta <span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio"
+                               name="respuestaCorrecta"
+                               th:field="*{respuestaCorrecta}"
+                               value="true"
+                               required>
+                        <span class="radio-label">Verdadero</span>
                     </label>
-                    <textarea class="form-control" 
-                              id="enunciado"
-                              th:field="*{enunciado}"
-                              rows="4"
-                              placeholder="Ejemplo: La Tierra es el tercer planeta del sistema solar"
-                              required 
-                              maxlength="500"></textarea>
-                    <small class="form-text text-muted">
-                        Escribe la pregunta (máximo 500 caracteres)
-                    </small>
-                </div>
-
-                <!-- CATEGORÍA -->
-                <div class="mb-3">
-                    <label for="categoria" class="form-label">
-                        Categoría <span class="text-danger">*</span>
+                    <label class="radio-option">
+                        <input type="radio"
+                               name="respuestaCorrecta"
+                               th:field="*{respuestaCorrecta}"
+                               value="false"
+                               required>
+                        <span class="radio-label">Falso</span>
                     </label>
-                    <select class="form-select" 
-                            id="categoria" 
-                            name="categoriaId"
-                            required>
-                        <option value="">-- Selecciona una categoría --</option>
-                        <option th:each="cat : ${categorias}"
-                                th:value="${cat.id}"
-                                th:text="${cat.nombre}"
-                                th:selected="${pregunta.categoria != null and pregunta.categoria.id == cat.id}">
-                        </option>
-                    </select>
                 </div>
+            </div>
 
-                <!-- RESPUESTA CORRECTA -->
-                <div class="mb-3">
-                    <label class="form-label">
-                        Respuesta Correcta <span class="text-danger">*</span>
-                    </label>
-                    <div class="mt-2">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" 
-                                   type="radio" 
-                                   name="respuestaCorrecta"
-                                   id="verdadero"
-                                   th:field="*{respuestaCorrecta}"
-                                   value="true"
-                                   required>
-                            <label class="form-check-label" for="verdadero">
-                                <strong class="text-success">✅ Verdadero</strong>
-                            </label>
-                        </div>
-                        
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" 
-                                   type="radio" 
-                                   name="respuestaCorrecta"
-                                   id="falso"
-                                   th:field="*{respuestaCorrecta}"
-                                   value="false"
-                                   required>
-                            <label class="form-check-label" for="falso">
-                                <strong class="text-danger">❌ Falso</strong>
-                            </label>
-                        </div>
-                    </div>
-                </div>
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn-save">Guardar</button>
+                <a th:href="@{/preguntas/vf}" class="btn-cancel">Cancelar</a>
+            </div>
 
-                <!-- BOTONES -->
-                <div class="d-flex gap-2 mt-4">
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        💾 Guardar
-                    </button>
-                    <a th:href="@{/preguntas/vf}" class="btn btn-secondary btn-lg">
-                        ❌ Cancelar
-                    </a>
-                </div>
-
-            </form>
-        </div>
+        </form>
     </div>
 
-    <!-- CONSEJOS -->
-    <div class="alert alert-info mt-4">
-        <h5 class="alert-heading">💡 Consejos:</h5>
-        <ul class="mb-0">
-            <li>El enunciado debe ser claro y sin ambigüedades</li>
-            <li>Evita dobles negaciones</li>
-            <li>La respuesta debe ser objetivamente verdadera o falsa</li>
-        </ul>
-    </div>
+  
 
 </div>
 
-<!-- FOOTER -->
 <div th:replace="~{fragments/footer :: footer}"></div>
-
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

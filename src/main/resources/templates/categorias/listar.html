@@ -5,85 +5,327 @@
     <meta charset="UTF-8">
     <title>Categorías - Quiz App</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: #0a0a0f;
+            color: #e8e8f0;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        .navbar { background: rgba(10,10,15,0.95) !important; border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+        .page-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        /* Header de página */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #f1f1f8;
+            letter-spacing: -0.02em;
+        }
+
+        .page-subtitle {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        /* Botón nuevo */
+        .btn-new {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #6366f1;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        .btn-new:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(99,102,241,0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Alertas */
+        .alert-dark {
+            padding: 14px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .alert-success-dark {
+            background: rgba(16,185,129,0.1);
+            border: 1px solid rgba(16,185,129,0.25);
+            color: #6ee7b7;
+        }
+        .alert-error-dark {
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.25);
+            color: #fca5a5;
+        }
+        .alert-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            opacity: 0.6;
+            font-size: 16px;
+        }
+        .alert-close:hover { opacity: 1; }
+
+        /* Contador */
+        .count-badge {
+            display: inline-block;
+            background: rgba(99,102,241,0.15);
+            border: 1px solid rgba(99,102,241,0.25);
+            color: #a5b4fc;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        /* Tabla */
+        .table-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead tr {
+            background: rgba(255,255,255,0.04);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+
+        thead th {
+            padding: 14px 20px;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #6b7280;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            transition: background 0.15s ease;
+        }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+        tbody td {
+            padding: 16px 20px;
+            font-size: 14px;
+            color: #d1d5db;
+            vertical-align: middle;
+        }
+
+        .td-id {
+            color: #4b5563;
+            font-size: 13px;
+            font-family: monospace;
+        }
+
+        .td-nombre {
+            font-weight: 500;
+            color: #f1f1f8;
+        }
+
+        .td-empty {
+            text-align: center;
+            color: #4b5563;
+            padding: 48px 20px;
+        }
+
+        /* Botones acción */
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin-right: 6px;
+        }
+        .btn-edit {
+            background: rgba(245,158,11,0.12);
+            border: 1px solid rgba(245,158,11,0.2);
+            color: #fbbf24;
+        }
+        .btn-edit:hover {
+            background: rgba(245,158,11,0.2);
+            color: #fbbf24;
+            text-decoration: none;
+        }
+        .btn-delete {
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.2);
+            color: #f87171;
+        }
+        .btn-delete:hover {
+            background: rgba(239,68,68,0.2);
+            color: #f87171;
+            text-decoration: none;
+        }
+
+        /* Paginación */
+        .pagination-area {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 28px;
+        }
+        .page-btn {
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #9ca3af;
+            background: rgba(255,255,255,0.03);
+            transition: all 0.15s ease;
+        }
+        .page-btn:hover {
+            background: rgba(99,102,241,0.15);
+            border-color: rgba(99,102,241,0.3);
+            color: #a5b4fc;
+            text-decoration: none;
+        }
+        .page-btn.active {
+            background: #6366f1;
+            border-color: #6366f1;
+            color: white;
+        }
+        .page-btn.disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        footer { border-top: 1px solid rgba(255,255,255,0.06); }
+    </style>
 </head>
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="container mt-4">
+<div class="page-wrapper">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Categorías</h1>
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Categorías</h1>
+            <p class="page-subtitle">Organiza tus preguntas por temáticas</p>
+        </div>
         <div sec:authorize="hasRole('ADMIN')">
-            <a th:href="@{/categorias/nueva}" class="btn btn-primary">
-                ➕ Nueva Categoría
+            <a th:href="@{/categorias/nueva}" class="btn-new">
+                + Nueva Categoría
             </a>
         </div>
     </div>
 
-    <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show">
-        <span th:text="${mensajeExito}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <!-- Alertas -->
+    <div th:if="${mensajeExito}" class="alert-dark alert-success-dark">
+        ✓ <span th:text="${mensajeExito}"></span>
+        <button class="alert-close" onclick="this.parentElement.remove()">✕</button>
     </div>
-    <div th:if="${mensajeError}" class="alert alert-danger alert-dismissible fade show">
-        <span th:text="${mensajeError}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-
-    <p class="text-muted">Total: <strong th:text="${totalElementos}">0</strong> categorías</p>
-
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover table-striped">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th sec:authorize="hasRole('ADMIN')">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:if="${#lists.isEmpty(categorias)}">
-                            <td colspan="4" class="text-center text-muted">
-                                No hay categorías. ¡Crea una nueva!
-                            </td>
-                        </tr>
-                        <tr th:each="categoria : ${categorias}">
-                            <td th:text="${categoria.id}">1</td>
-                            <td><strong th:text="${categoria.nombre}">Historia</strong></td>
-                            <td th:text="${categoria.descripcion}">Descripción</td>
-                            <td sec:authorize="hasRole('ADMIN')">
-                                <a th:href="@{/categorias/editar/{id}(id=${categoria.id})}"
-                                   class="btn btn-sm btn-warning">✏️ Editar</a>
-                                <a th:href="@{/categorias/eliminar/{id}(id=${categoria.id})}"
-                                   class="btn btn-sm btn-danger"
-                                   onclick="return confirm('¿Estás seguro?')">🗑️ Eliminar</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div th:if="${mensajeError}" class="alert-dark alert-error-dark">
+        ✕ <span th:text="${mensajeError}"></span>
+        <button class="alert-close" onclick="this.parentElement.remove()">✕</button>
     </div>
 
-    <nav th:if="${totalPaginas > 1}" class="mt-4">
-        <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${paginaActual == 0} ? 'disabled'">
-                <a class="page-link" th:href="@{/categorias(page=${paginaActual - 1})}">Anterior</a>
-            </li>
-            <li class="page-item"
-                th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}"
-                th:classappend="${i == paginaActual} ? 'active'">
-                <a class="page-link" th:href="@{/categorias(page=${i})}" th:text="${i + 1}">1</a>
-            </li>
-            <li class="page-item" th:classappend="${paginaActual == totalPaginas - 1} ? 'disabled'">
-                <a class="page-link" th:href="@{/categorias(page=${paginaActual + 1})}">Siguiente</a>
-            </li>
-        </ul>
-    </nav>
+    <!-- Contador -->
+    <span class="count-badge">
+        <span th:text="${totalElementos}">0</span> categorías en total
+    </span>
+
+    <!-- Tabla -->
+    <div class="table-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th sec:authorize="hasRole('ADMIN')">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${#lists.isEmpty(categorias)}">
+                    <td colspan="4" class="td-empty">
+                        No hay categorías todavía. ¡Crea la primera!
+                    </td>
+                </tr>
+                <tr th:each="categoria : ${categorias}">
+                    <td class="td-id" th:text="${categoria.id}">1</td>
+                    <td class="td-nombre" th:text="${categoria.nombre}">Historia</td>
+                    <td th:text="${categoria.descripcion}">Descripción</td>
+                    <td sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{/categorias/editar/{id}(id=${categoria.id})}"
+                           class="btn-action btn-edit">✏ Editar</a>
+                        <a th:href="@{/categorias/eliminar/{id}(id=${categoria.id})}"
+                           class="btn-action btn-delete"
+                           onclick="return confirm('¿Estás seguro?')">🗑 Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    <div th:if="${totalPaginas > 1}" class="pagination-area">
+        <a class="page-btn"
+           th:classappend="${paginaActual == 0} ? 'disabled'"
+           th:href="@{/categorias(page=${paginaActual - 1})}">← Anterior</a>
+
+        <a th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}"
+           class="page-btn"
+           th:classappend="${i == paginaActual} ? 'active'"
+           th:href="@{/categorias(page=${i})}"
+           th:text="${i + 1}">1</a>
+
+        <a class="page-btn"
+           th:classappend="${paginaActual == totalPaginas - 1} ? 'disabled'"
+           th:href="@{/categorias(page=${paginaActual + 1})}">Siguiente →</a>
+    </div>
 
 </div>
 

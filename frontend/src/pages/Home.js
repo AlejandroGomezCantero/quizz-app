@@ -13,39 +13,44 @@ function Home() {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h1>Quiz App</h1>
+        <h1>🎯 Quiz App</h1>
         <div>
-          <span style={styles.username}>Usuario: {username}</span>
-          <button style={styles.logoutBtn} onClick={logout}>Cerrar Sesion</button>
+          <span style={styles.username}>👤 {username}</span>
+          <button style={styles.logoutBtn} onClick={logout}>Cerrar Sesión</button>
         </div>
       </div>
 
       <div style={styles.cards}>
+
         <div style={styles.card}>
-          <h3>Gestion de Usuarios</h3>
-          <p>Ver y gestionar usuarios del sistema</p>
+          <div style={styles.icon}>👥</div>
+          <h3>Gestión de Usuarios</h3>
+          <p style={styles.desc}>Ver y gestionar usuarios del sistema</p>
           <button style={styles.btn} onClick={() => navigate('/usuarios')}>
             Ir a Usuarios
           </button>
         </div>
 
         <div style={styles.card}>
+          <div style={styles.icon}>🧠</div>
           <h3>Realizar Test</h3>
-          <p>Pon a prueba tus conocimientos</p>
-          <button style={{...styles.btn, background: '#28a745'}}
-            onClick={() => navigate('/test/configurar')}>
+          <p style={styles.desc}>10 preguntas al azar de todos los tipos</p>
+          <button style={{ ...styles.btn, background: '#28a745' }}
+            onClick={() => navigate('/test/realizar')}>
             Empezar Test
           </button>
         </div>
 
         <div style={styles.card}>
+          <div style={styles.icon}>📊</div>
           <h3>Mis Resultados</h3>
-          <p>Ver historial de tests realizados</p>
-          <button style={{...styles.btn, background: '#17a2b8'}}
+          <p style={styles.desc}>Ver historial de tests realizados</p>
+          <button style={{ ...styles.btn, background: '#17a2b8' }}
             onClick={() => navigate('/test/resultados')}>
             Ver Resultados
           </button>
         </div>
+
       </div>
     </div>
   );
@@ -53,12 +58,23 @@ function Home() {
 
 const styles = {
   container: { padding: '20px', maxWidth: '1000px', margin: '0 auto' },
-  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px', padding: '20px', background: '#343a40', color: 'white', borderRadius: '10px' },
-  username: { marginRight: '15px', fontSize: '16px' },
-  logoutBtn: { padding: '8px 15px', background: '#dc3545', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' },
-  cards: { display: 'flex', gap: '20px', flexWrap: 'wrap' },
-  card: { flex: 1, minWidth: '250px', background: 'white', padding: '30px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', textAlign: 'center' },
-  btn: { padding: '10px 20px', background: '#007bff', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', fontSize: '16px', marginTop: '10px' }
+  header: {
+    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+    marginBottom: 30, padding: 20, background: '#212529', color: 'white', borderRadius: 12
+  },
+  username: { marginRight: 15, fontSize: 16 },
+  logoutBtn: { padding: '8px 15px', background: '#dc3545', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer' },
+  cards: { display: 'flex', gap: 20, flexWrap: 'wrap' },
+  card: {
+    flex: 1, minWidth: 250, background: 'white', padding: 30,
+    borderRadius: 12, boxShadow: '0 4px 15px rgba(0,0,0,0.08)', textAlign: 'center'
+  },
+  icon: { fontSize: 52, marginBottom: 12 },
+  desc: { color: '#6c757d', marginBottom: 16, fontSize: 15 },
+  btn: {
+    padding: '10px 24px', background: '#007bff', color: 'white',
+    border: 'none', borderRadius: 6, cursor: 'pointer', fontSize: 16
+  },
 };
 
 export default Home;

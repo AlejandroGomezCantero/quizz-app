@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Pregunta Selección Múltiple - Quiz App</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #0a0a0f; color: #e8e8f0; font-family: 'Inter', sans-serif; min-height: 100vh; }
+        .page-wrapper { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+        .page-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3); color: #a5b4fc; padding: 6px 16px; border-radius: 999px; font-size: 13px; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 24px; }
+        .page-title { font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800; color: #f1f1f8; margin-bottom: 32px; letter-spacing: -0.02em; }
+        .dark-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 32px; margin-bottom: 20px; }
+        .dark-card-header { border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 16px; margin-bottom: 24px; font-family: 'Syne', sans-serif; font-size: 1rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; }
+        .field-label { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+        .field-value { font-size: 1.1rem; color: #e8e8f0; margin-bottom: 24px; line-height: 1.6; }
+        .badge-categoria { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #10b981; padding: 6px 14px; border-radius: 6px; font-size: 14px; }
+        .opcion-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; font-size: 14px; color: #e8e8f0; }
+        .opcion-item.correcta { background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.3); }
+        .opcion-letra { background: rgba(255,255,255,0.08); color: #9ca3af; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+        .opcion-item.correcta .opcion-letra { background: rgba(16,185,129,0.2); color: #10b981; }
+        .correcta-tag { margin-left: auto; font-size: 12px; color: #10b981; font-weight: 600; }
+        .badge-correcta { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #10b981; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-right: 6px; display: inline-block; }
+        .btn-dark-warning { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); color: #f59e0b; padding: 10px 24px; border-radius: 8px; font-size: 14px; text-decoration: none; transition: all 0.2s; }
+        .btn-dark-warning:hover { background: rgba(245,158,11,0.25); color: #f59e0b; }
+        .btn-dark-danger { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #ef4444; padding: 10px 24px; border-radius: 8px; font-size: 14px; text-decoration: none; transition: all 0.2s; }
+        .btn-dark-danger:hover { background: rgba(239,68,68,0.25); color: #ef4444; }
+        .btn-dark-ghost { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: #9ca3af; padding: 10px 24px; border-radius: 8px; font-size: 14px; text-decoration: none; transition: all 0.2s; }
+        .btn-dark-ghost:hover { background: rgba(255,255,255,0.05); color: #e8e8f0; }
+        .navbar { background: rgba(10,10,15,0.95) !important; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="page-wrapper">
+
+    <div class="page-badge">Selección Múltiple</div>
+    <h1 class="page-title">Detalle de Pregunta #<span th:text="${pregunta.id}">1</span></h1>
+
+    <div class="dark-card">
+        <div class="dark-card-header">Información de la pregunta</div>
+
+        <div class="field-label">Enunciado</div>
+        <div class="field-value" th:text="${pregunta.enunciado}"></div>
+
+        <div class="field-label">Categoría</div>
+        <div class="field-value">
+            <span th:if="${pregunta.categoria != null}" class="badge-categoria" th:text="${pregunta.categoria.nombre}"></span>
+            <span th:if="${pregunta.categoria == null}" style="color:#6b7280">Sin categoría</span>
+        </div>
+
+        <div class="field-label">Opciones</div>
+        <div style="margin-bottom:24px">
+            <div th:each="opcion : ${ {'A','B','C','D'} }"
+                 th:with="texto=${opcion == 'A' ? pregunta.opcionA : opcion == 'B' ? pregunta.opcionB : opcion == 'C' ? pregunta.opcionC : pregunta.opcionD},
+                          esCorrecta=${pregunta.respuestasCorrectas != null and pregunta.respuestasCorrectas.contains(opcion)}"
+                 class="opcion-item"
+                 th:classappend="${esCorrecta} ? 'correcta'">
+                <span class="opcion-letra" th:text="${opcion}">A</span>
+                <span th:text="${texto}"></span>
+                <span th:if="${esCorrecta}" class="correcta-tag">Correcta</span>
+            </div>
+        </div>
+
+        <div class="field-label">Respuestas Correctas</div>
+        <div class="field-value">
+            <span th:each="correcta : ${pregunta.respuestasCorrectas}"
+                  class="badge-correcta"
+                  th:text="${correcta}"></span>
+        </div>
+    </div>
+
+    <div class="d-flex gap-3 mb-4" sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/preguntas/seleccion-multiple/editar/{id}(id=${pregunta.id})}" class="btn-dark-warning">✏️ Editar</a>
+        <a th:href="@{/preguntas/seleccion-multiple/eliminar/{id}(id=${pregunta.id})}"
+           class="btn-dark-danger"
+           onclick="return confirm('¿Seguro que quieres eliminar esta pregunta?')">🗑️ Eliminar</a>
+    </div>
+    <div class="mb-4">
+        <a th:href="@{/preguntas/seleccion-multiple}" class="btn-dark-ghost">⬅️ Volver</a>
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
